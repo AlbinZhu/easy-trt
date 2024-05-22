@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "result.h"
+#include "fastdeploy/vision/common/result.h"
 
 namespace fastdeploy {
 namespace vision {
@@ -66,7 +66,7 @@ std::string ClassifyResult::Str() {
   return out;
 }
 
-ClassifyResult &ClassifyResult::operator=(ClassifyResult &&other) {
+ClassifyResult& ClassifyResult::operator=(ClassifyResult&& other) {
   if (&other != this) {
     label_ids = std::move(other.label_ids);
     scores = std::move(other.scores);
@@ -103,7 +103,7 @@ std::string Mask::Str() {
   return out;
 }
 
-DetectionResult::DetectionResult(const DetectionResult &res) {
+DetectionResult::DetectionResult(const DetectionResult& res) {
   boxes.assign(res.boxes.begin(), res.boxes.end());
   rotated_boxes.assign(res.rotated_boxes.begin(), res.rotated_boxes.end());
   scores.assign(res.scores.begin(), res.scores.end());
@@ -118,7 +118,7 @@ DetectionResult::DetectionResult(const DetectionResult &res) {
   }
 }
 
-DetectionResult &DetectionResult::operator=(DetectionResult &&other) {
+DetectionResult& DetectionResult::operator=(DetectionResult&& other) {
   if (&other != this) {
     boxes = std::move(other.boxes);
     rotated_boxes = std::move(other.rotated_boxes);
@@ -176,12 +176,14 @@ std::string DetectionResult::Str() {
   if (!contain_masks) {
     out = "DetectionResult: [xmin, ymin, xmax, ymax, score, label_id]\n";
     if (!rotated_boxes.empty()) {
-      out = "DetectionResult: [x1, y1, x2, y2, x3, y3, x4, y4, score, "
-            "label_id]\n";
+      out =
+          "DetectionResult: [x1, y1, x2, y2, x3, y3, x4, y4, score, "
+          "label_id]\n";
     }
   } else {
-    out = "DetectionResult: [xmin, ymin, xmax, ymax, score, label_id, "
-          "mask_shape]\n";
+    out =
+        "DetectionResult: [xmin, ymin, xmax, ymax, score, label_id, "
+        "mask_shape]\n";
     if (!rotated_boxes.empty()) {
       out =
           "DetectionResult: [x1, y1, x2, y2, x3, y3, x4, y4, score, label_id, "
@@ -216,7 +218,7 @@ std::string DetectionResult::Str() {
 }
 
 // PerceptionResult -----------------------------------------------------
-PerceptionResult::PerceptionResult(const PerceptionResult &res) {
+PerceptionResult::PerceptionResult(const PerceptionResult& res) {
   scores.assign(res.scores.begin(), res.scores.end());
   label_ids.assign(res.label_ids.begin(), res.label_ids.end());
   boxes.assign(res.boxes.begin(), res.boxes.end());
@@ -228,7 +230,7 @@ PerceptionResult::PerceptionResult(const PerceptionResult &res) {
   valid.assign(res.valid.begin(), res.valid.end());
 }
 
-PerceptionResult &PerceptionResult::operator=(PerceptionResult &&other) {
+PerceptionResult& PerceptionResult::operator=(PerceptionResult&& other) {
   if (&other != this) {
     scores = std::move(other.scores);
     label_ids = std::move(other.label_ids);
@@ -396,7 +398,7 @@ std::string MOTResult::Str() {
   return out;
 }
 
-FaceDetectionResult::FaceDetectionResult(const FaceDetectionResult &res) {
+FaceDetectionResult::FaceDetectionResult(const FaceDetectionResult& res) {
   boxes.assign(res.boxes.begin(), res.boxes.end());
   landmarks.assign(res.landmarks.begin(), res.landmarks.end());
   scores.assign(res.scores.begin(), res.scores.end());
@@ -551,7 +553,7 @@ std::string SegmentationResult::Str() {
   return out;
 }
 
-SegmentationResult &SegmentationResult::operator=(SegmentationResult &&other) {
+SegmentationResult& SegmentationResult::operator=(SegmentationResult&& other) {
   if (&other != this) {
     label_map = std::move(other.label_map);
     shape = std::move(other.shape);
@@ -563,7 +565,7 @@ SegmentationResult &SegmentationResult::operator=(SegmentationResult &&other) {
   }
   return *this;
 }
-FaceRecognitionResult::FaceRecognitionResult(const FaceRecognitionResult &res) {
+FaceRecognitionResult::FaceRecognitionResult(const FaceRecognitionResult& res) {
   embedding.assign(res.embedding.begin(), res.embedding.end());
 }
 
@@ -603,7 +605,7 @@ std::string FaceRecognitionResult::Str() {
   return out;
 }
 
-MattingResult::MattingResult(const MattingResult &res) {
+MattingResult::MattingResult(const MattingResult& res) {
   alpha.assign(res.alpha.begin(), res.alpha.end());
   foreground.assign(res.foreground.begin(), res.foreground.end());
   shape.assign(res.shape.begin(), res.shape.end());
@@ -819,5 +821,5 @@ std::string HeadPoseResult::Str() {
   return out;
 }
 
-} // namespace vision
-} // namespace fastdeploy
+}  // namespace vision
+}  // namespace fastdeploy

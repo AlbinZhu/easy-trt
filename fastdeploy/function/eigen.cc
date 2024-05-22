@@ -25,9 +25,9 @@ std::shared_ptr<EigenDeviceWrapper> EigenDeviceWrapper::GetInstance() {
   return instance_;
 }
 
-const Eigen::DefaultDevice* EigenDeviceWrapper::GetDevice() const {
+const Eigen::DefaultDevice *EigenDeviceWrapper::GetDevice() const {
   return &device_;
 }
 
-}
-}  // namespace fastdeploy
+} // namespace function
+} // namespace fastdeploy

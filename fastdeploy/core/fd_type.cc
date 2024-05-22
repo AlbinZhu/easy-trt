@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "fd_type.h"
+#include "fastdeploy/core/fd_type.h"
 
-#include "float16.h"
-#include "utils.h"
+#include "fastdeploy/core/float16.h"
+#include "fastdeploy/utils/utils.h"
 
 namespace fastdeploy {
 
-int FDDataTypeSize(const FDDataType &data_type) {
+int FDDataTypeSize(const FDDataType& data_type) {
   if (data_type == FDDataType::BOOL) {
     return sizeof(bool);
   } else if (data_type == FDDataType::INT16) {
@@ -44,73 +44,73 @@ int FDDataTypeSize(const FDDataType &data_type) {
   return -1;
 }
 
-std::string Str(const FDDataType &fdt) {
+std::string Str(const FDDataType& fdt) {
   std::string out;
   switch (fdt) {
-  case FDDataType::BOOL:
-    out = "FDDataType::BOOL";
-    break;
-  case FDDataType::INT16:
-    out = "FDDataType::INT16";
-    break;
-  case FDDataType::INT32:
-    out = "FDDataType::INT32";
-    break;
-  case FDDataType::INT64:
-    out = "FDDataType::INT64";
-    break;
-  case FDDataType::FP32:
-    out = "FDDataType::FP32";
-    break;
-  case FDDataType::FP64:
-    out = "FDDataType::FP64";
-    break;
-  case FDDataType::FP16:
-    out = "FDDataType::FP16";
-    break;
-  case FDDataType::UINT8:
-    out = "FDDataType::UINT8";
-    break;
-  case FDDataType::INT8:
-    out = "FDDataType::INT8";
-    break;
-  default:
-    out = "FDDataType::UNKNOWN";
+    case FDDataType::BOOL:
+      out = "FDDataType::BOOL";
+      break;
+    case FDDataType::INT16:
+      out = "FDDataType::INT16";
+      break;
+    case FDDataType::INT32:
+      out = "FDDataType::INT32";
+      break;
+    case FDDataType::INT64:
+      out = "FDDataType::INT64";
+      break;
+    case FDDataType::FP32:
+      out = "FDDataType::FP32";
+      break;
+    case FDDataType::FP64:
+      out = "FDDataType::FP64";
+      break;
+    case FDDataType::FP16:
+      out = "FDDataType::FP16";
+      break;
+    case FDDataType::UINT8:
+      out = "FDDataType::UINT8";
+      break;
+    case FDDataType::INT8:
+      out = "FDDataType::INT8";
+      break;
+    default:
+      out = "FDDataType::UNKNOWN";
   }
   return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const FDDataType &fdt) {
+std::ostream& operator<<(std::ostream& out, const FDDataType& fdt) {
   switch (fdt) {
-  case FDDataType::BOOL:
-    out << "FDDataType::BOOL";
-    break;
-  case FDDataType::INT16:
-    out << "FDDataType::INT16";
-    break;
-  case FDDataType::INT32:
-    out << "FDDataType::INT32";
-    break;
-  case FDDataType::INT64:
-    out << "FDDataType::INT64";
-    break;
-  case FDDataType::FP32:
-    out << "FDDataType::FP32";
-    break;
-  case FDDataType::FP64:
-    out << "FDDataType::FP64";
-    break;
-  case FDDataType::FP16:
-    out << "FDDataType::FP16";
-    break;
-  case FDDataType::UINT8:
-    out << "FDDataType::UINT8";
-    break;
-  case FDDataType::INT8:
-    out << "FDDataType::INT8";
-    break;
-  default:
-    out << "FDDataType::UNKNOWN";
+    case FDDataType::BOOL:
+      out << "FDDataType::BOOL";
+      break;
+    case FDDataType::INT16:
+      out << "FDDataType::INT16";
+      break;
+    case FDDataType::INT32:
+      out << "FDDataType::INT32";
+      break;
+    case FDDataType::INT64:
+      out << "FDDataType::INT64";
+      break;
+    case FDDataType::FP32:
+      out << "FDDataType::FP32";
+      break;
+    case FDDataType::FP64:
+      out << "FDDataType::FP64";
+      break;
+    case FDDataType::FP16:
+      out << "FDDataType::FP16";
+      break;
+    case FDDataType::UINT8:
+      out << "FDDataType::UINT8";
+      break;
+    case FDDataType::INT8:
+      out << "FDDataType::INT8";
+      break;
+    default:
+      out << "FDDataType::UNKNOWN";
   }
   return out;
 }
@@ -118,20 +118,28 @@ std::ostream &operator<<(std::ostream &out, const FDDataType &fdt) {
 template <typename PlainType>
 const FDDataType TypeToDataType<PlainType>::dtype = UNKNOWN1;
 
-template <> const FDDataType TypeToDataType<bool>::dtype = BOOL;
+template <>
+const FDDataType TypeToDataType<bool>::dtype = BOOL;
 
-template <> const FDDataType TypeToDataType<int16_t>::dtype = INT16;
+template <>
+const FDDataType TypeToDataType<int16_t>::dtype = INT16;
 
-template <> const FDDataType TypeToDataType<int32_t>::dtype = INT32;
+template <>
+const FDDataType TypeToDataType<int32_t>::dtype = INT32;
 
-template <> const FDDataType TypeToDataType<int64_t>::dtype = INT64;
+template <>
+const FDDataType TypeToDataType<int64_t>::dtype = INT64;
 
-template <> const FDDataType TypeToDataType<float>::dtype = FP32;
+template <>
+const FDDataType TypeToDataType<float>::dtype = FP32;
 
-template <> const FDDataType TypeToDataType<double>::dtype = FP64;
+template <>
+const FDDataType TypeToDataType<double>::dtype = FP64;
 
-template <> const FDDataType TypeToDataType<uint8_t>::dtype = UINT8;
+template <>
+const FDDataType TypeToDataType<uint8_t>::dtype = UINT8;
 
-template <> const FDDataType TypeToDataType<int8_t>::dtype = INT8;
+template <>
+const FDDataType TypeToDataType<int8_t>::dtype = INT8;
 
-} // namespace fastdeploy
+}  // namespace fastdeploy

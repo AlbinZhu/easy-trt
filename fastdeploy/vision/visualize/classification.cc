@@ -20,7 +20,7 @@
 namespace fastdeploy {
 namespace vision {
 
-cv::Mat VisClassification(const cv::Mat& im, const ClassifyResult& result,
+cv::Mat VisClassification(const cv::Mat &im, const ClassifyResult &result,
                           int top_k, float score_threshold, float font_size) {
   int h = im.rows;
   int w = im.cols;
@@ -51,8 +51,8 @@ cv::Mat VisClassification(const cv::Mat& im, const ClassifyResult& result,
 }
 
 // Visualize ClassifyResult with custom labels.
-cv::Mat VisClassification(const cv::Mat& im, const ClassifyResult& result,
-                          const std::vector<std::string>& labels, int top_k,
+cv::Mat VisClassification(const cv::Mat &im, const ClassifyResult &result,
+                          const std::vector<std::string> &labels, int top_k,
                           float score_threshold, float font_size) {
   int h = im.rows;
   int w = im.cols;
@@ -92,5 +92,5 @@ cv::Mat VisClassification(const cv::Mat& im, const ClassifyResult& result,
   return vis_im;
 }
 
-}  // namespace vision
-}  // namespace fastdeploy
+} // namespace vision
+} // namespace fastdeploy

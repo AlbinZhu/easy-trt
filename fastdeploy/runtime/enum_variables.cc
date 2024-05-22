@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "enum_variables.h"
+#include "fastdeploy/runtime/enum_variables.h"
 
 namespace fastdeploy {
-std::ostream &operator<<(std::ostream &out, const Backend &backend) {
+std::ostream& operator<<(std::ostream& out, const Backend& backend) {
   if (backend == Backend::ORT) {
     out << "Backend::ORT";
   } else if (backend == Backend::TRT) {
@@ -42,42 +42,42 @@ std::ostream &operator<<(std::ostream &out, const Backend &backend) {
   return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const Device &d) {
+std::ostream& operator<<(std::ostream& out, const Device& d) {
   switch (d) {
-  case Device::CPU:
-    out << "Device::CPU";
-    break;
-  case Device::GPU:
-    out << "Device::GPU";
-    break;
-  case Device::RKNPU:
-    out << "Device::RKNPU";
-    break;
-  case Device::SUNRISENPU:
-    out << "Device::SUNRISENPU";
-    break;
-  case Device::SOPHGOTPUD:
-    out << "Device::SOPHGOTPUD";
-    break;
-  case Device::TIMVX:
-    out << "Device::TIMVX";
-    break;
-  case Device::KUNLUNXIN:
-    out << "Device::KUNLUNXIN";
-    break;
-  case Device::ASCEND:
-    out << "Device::ASCEND";
-    break;
-  case Device::DIRECTML:
-    out << "Device::DIRECTML";
-    break;
-  default:
-    out << "Device::UNKOWN";
+    case Device::CPU:
+      out << "Device::CPU";
+      break;
+    case Device::GPU:
+      out << "Device::GPU";
+      break;
+    case Device::RKNPU:
+      out << "Device::RKNPU";
+      break;
+    case Device::SUNRISENPU:
+      out << "Device::SUNRISENPU";
+      break;
+    case Device::SOPHGOTPUD:
+      out << "Device::SOPHGOTPUD";
+      break;
+    case Device::TIMVX:
+      out << "Device::TIMVX";
+      break;
+    case Device::KUNLUNXIN:
+      out << "Device::KUNLUNXIN";
+      break;
+    case Device::ASCEND:
+      out << "Device::ASCEND";
+      break;
+    case Device::DIRECTML:
+      out << "Device::DIRECTML";
+      break;
+    default:
+      out << "Device::UNKOWN";
   }
   return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const ModelFormat &format) {
+std::ostream& operator<<(std::ostream& out, const ModelFormat& format) {
   if (format == ModelFormat::PADDLE) {
     out << "ModelFormat::PADDLE";
   } else if (format == ModelFormat::ONNX) {
@@ -133,7 +133,7 @@ std::vector<Backend> GetAvailableBackends() {
   return backends;
 }
 
-bool IsBackendAvailable(const Backend &backend) {
+bool IsBackendAvailable(const Backend& backend) {
   std::vector<Backend> backends = GetAvailableBackends();
   for (size_t i = 0; i < backends.size(); ++i) {
     if (backend == backends[i]) {
@@ -142,4 +142,4 @@ bool IsBackendAvailable(const Backend &backend) {
   }
   return false;
 }
-} // namespace fastdeploy
+}  // namespace fastdeploy

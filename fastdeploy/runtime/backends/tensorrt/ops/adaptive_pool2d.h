@@ -13,89 +13,89 @@
 // limitations under the License.
 
 #pragma once
-#include "common.h"  // NOLINT
+#include "common.h" // NOLINT
 #include "fastdeploy/runtime/backends/common/cuda/adaptive_pool2d_kernel.h"
 
 namespace fastdeploy {
 
 class AdaptivePool2d : public BasePlugin {
- public:
+public:
   AdaptivePool2d(std::vector<int32_t> output_size, std::string pooling_type);
 
-  AdaptivePool2d(const void* buffer, size_t length);
+  AdaptivePool2d(const void *buffer, size_t length);
 
   ~AdaptivePool2d() override = default;
 
   int getNbOutputs() const noexcept override;
 
   nvinfer1::DimsExprs
-  getOutputDimensions(int outputIndex, const nvinfer1::DimsExprs* inputs,
+  getOutputDimensions(int outputIndex, const nvinfer1::DimsExprs *inputs,
                       int nbInputs,
-                      nvinfer1::IExprBuilder& exprBuilder) noexcept override;
+                      nvinfer1::IExprBuilder &exprBuilder) noexcept override;
 
   nvinfer1::DataType getOutputDataType(int index,
-                                       const nvinfer1::DataType* inputType,
+                                       const nvinfer1::DataType *inputType,
                                        int nbInputs) const noexcept override;
 
   bool supportsFormatCombination(int pos,
-                                 const nvinfer1::PluginTensorDesc* inOut,
+                                 const nvinfer1::PluginTensorDesc *inOut,
                                  int nbInputs, int nbOutputs) noexcept override;
 
   int initialize() noexcept override;
 
   void terminate() noexcept override;
 
-  size_t getWorkspaceSize(const nvinfer1::PluginTensorDesc* inputs,
+  size_t getWorkspaceSize(const nvinfer1::PluginTensorDesc *inputs,
                           int nbInputs,
-                          const nvinfer1::PluginTensorDesc* outputs,
+                          const nvinfer1::PluginTensorDesc *outputs,
                           int nbOutputs) const noexcept override;
 
-  int enqueue(const nvinfer1::PluginTensorDesc* inputDesc,
-              const nvinfer1::PluginTensorDesc* outputDesc,
-              const void* const* inputs, void* const* outputs, void* workspace,
+  int enqueue(const nvinfer1::PluginTensorDesc *inputDesc,
+              const nvinfer1::PluginTensorDesc *outputDesc,
+              const void *const *inputs, void *const *outputs, void *workspace,
               cudaStream_t stream) noexcept override;
 
   size_t getSerializationSize() const noexcept override;
 
-  void serialize(void* buffer) const noexcept override;
+  void serialize(void *buffer) const noexcept override;
 
-  const char* getPluginType() const noexcept override;
+  const char *getPluginType() const noexcept override;
 
-  const char* getPluginVersion() const noexcept override;
-  void configurePlugin(const nvinfer1::DynamicPluginTensorDesc* in,
+  const char *getPluginVersion() const noexcept override;
+  void configurePlugin(const nvinfer1::DynamicPluginTensorDesc *in,
                        int nbInputs,
-                       const nvinfer1::DynamicPluginTensorDesc* out,
+                       const nvinfer1::DynamicPluginTensorDesc *out,
                        int nbOutputs) noexcept override;
   void destroy() noexcept override;
 
-  nvinfer1::IPluginV2DynamicExt* clone() const noexcept override;
+  nvinfer1::IPluginV2DynamicExt *clone() const noexcept override;
 
- private:
+private:
   std::vector<int32_t> output_size_;
   std::string pooling_type_;
 };
 
 class AdaptivePool2dPluginCreator : public BaseCreator {
- public:
+public:
   AdaptivePool2dPluginCreator();
 
   ~AdaptivePool2dPluginCreator() override = default;
 
-  const char* getPluginName() const noexcept override;
+  const char *getPluginName() const noexcept override;
 
-  const char* getPluginVersion() const noexcept override;
+  const char *getPluginVersion() const noexcept override;
 
-  const nvinfer1::PluginFieldCollection* getFieldNames() noexcept override;
+  const nvinfer1::PluginFieldCollection *getFieldNames() noexcept override;
 
-  nvinfer1::IPluginV2DynamicExt*
-  createPlugin(const char* name,
-               const nvinfer1::PluginFieldCollection* fc) noexcept override;
+  nvinfer1::IPluginV2DynamicExt *
+  createPlugin(const char *name,
+               const nvinfer1::PluginFieldCollection *fc) noexcept override;
 
-  nvinfer1::IPluginV2DynamicExt*
-  deserializePlugin(const char* name, const void* serialData,
+  nvinfer1::IPluginV2DynamicExt *
+  deserializePlugin(const char *name, const void *serialData,
                     size_t serialLength) noexcept override;
 
- private:
+private:
   static nvinfer1::PluginFieldCollection mFC;
   static std::vector<nvinfer1::PluginField> mPluginAttributes;
   std::vector<int32_t> output_size_;
@@ -104,4 +104,4 @@ class AdaptivePool2dPluginCreator : public BaseCreator {
 
 REGISTER_TENSORRT_PLUGIN(AdaptivePool2dPluginCreator);
 
-}  // namespace fastdeploy
+} // namespace fastdeploy

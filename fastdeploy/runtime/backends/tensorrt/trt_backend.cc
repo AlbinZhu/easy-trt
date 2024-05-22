@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "backends/tensorrt/trt_backend.h"
+#include "fastdeploy/runtime/backends/tensorrt/trt_backend.h"
 
 #include <cstring>
 #include <unordered_map>
 
-#include "../../../paddle2onnx/converter.h"
 #include "NvInferRuntime.h"
-#include "cuda_cast.h"
-#include "utils.h"
+#include "fastdeploy/function/cuda_cast.h"
+#include "fastdeploy/utils/utils.h"
+#include "paddle2onnx/converter.h"
 
 namespace fastdeploy {
 
@@ -334,17 +334,17 @@ bool TrtBackend::Infer(std::vector<FDTensor> &inputs,
     BuildTrtEngine();
   }
 
-  RUNTIME_PROFILE_LOOP_H2D_D2H_BEGIN
+  /* RUNTIME_PROFILE_LOOP_H2D_D2H_BEGIN */
   cudaSetDevice(option_.gpu_id);
   SetInputs(inputs);
   AllocateOutputsBuffer(outputs, copy_to_fd);
 
-  RUNTIME_PROFILE_LOOP_BEGIN(1)
+  /* RUNTIME_PROFILE_LOOP_BEGIN(1) */
   if (!context_->enqueueV2(bindings_.data(), stream_, nullptr)) {
     FDERROR << "Failed to Infer with TensorRT." << std::endl;
     return false;
   }
-  RUNTIME_PROFILE_LOOP_END
+  /* RUNTIME_PROFILE_LOOP_END */
 
   for (size_t i = 0; i < outputs->size(); ++i) {
     // if the final output tensor's dtype is different from the model output
@@ -386,7 +386,7 @@ bool TrtBackend::Infer(std::vector<FDTensor> &inputs,
     FDASSERT(cudaStreamSynchronize(stream_) == cudaSuccess,
              "[ERROR] Error occurs while sync cuda stream.");
   }
-  RUNTIME_PROFILE_LOOP_H2D_D2H_END
+  /* RUNTIME_PROFILE_LOOP_H2D_D2H_END */
   return true;
 }
 

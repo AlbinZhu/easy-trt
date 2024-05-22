@@ -21,7 +21,6 @@
 // \brief
 // \author Qi Liu, Xinyu Wang
 
-#ifdef WITH_GPU
 #include <opencv2/opencv.hpp>
 
 #include "fastdeploy/vision/utils/cuda_utils.h"
@@ -34,13 +33,15 @@ struct AffineMatrix {
   float value[6];
 };
 
-__global__ void YoloPreprocessCudaKernel(
-    uint8_t* src, int src_line_size, int src_width, int src_height, float* dst,
-    int dst_width, int dst_height, uint8_t padding_color_b,
-    uint8_t padding_color_g, uint8_t padding_color_r, AffineMatrix d2s,
-    int edge) {
+__global__ void
+YoloPreprocessCudaKernel(uint8_t *src, int src_line_size, int src_width,
+                         int src_height, float *dst, int dst_width,
+                         int dst_height, uint8_t padding_color_b,
+                         uint8_t padding_color_g, uint8_t padding_color_r,
+                         AffineMatrix d2s, int edge) {
   int position = blockDim.x * blockIdx.x + threadIdx.x;
-  if (position >= edge) return;
+  if (position >= edge)
+    return;
 
   float m_x1 = d2s.value[0];
   float m_y1 = d2s.value[1];
@@ -72,19 +73,23 @@ __global__ void YoloPreprocessCudaKernel(
     float hy = 1 - ly;
     float hx = 1 - lx;
     float w1 = hy * hx, w2 = hy * lx, w3 = ly * hx, w4 = ly * lx;
-    uint8_t* v1 = const_value;
-    uint8_t* v2 = const_value;
-    uint8_t* v3 = const_value;
-    uint8_t* v4 = const_value;
+    uint8_t *v1 = const_value;
+    uint8_t *v2 = const_value;
+    uint8_t *v3 = const_value;
+    uint8_t *v4 = const_value;
 
     if (y_low >= 0) {
-      if (x_low >= 0) v1 = src + y_low * src_line_size + x_low * 3;
-      if (x_high < src_width) v2 = src + y_low * src_line_size + x_high * 3;
+      if (x_low >= 0)
+        v1 = src + y_low * src_line_size + x_low * 3;
+      if (x_high < src_width)
+        v2 = src + y_low * src_line_size + x_high * 3;
     }
 
     if (y_high < src_height) {
-      if (x_low >= 0) v3 = src + y_high * src_line_size + x_low * 3;
-      if (x_high < src_width) v4 = src + y_high * src_line_size + x_high * 3;
+      if (x_low >= 0)
+        v3 = src + y_high * src_line_size + x_low * 3;
+      if (x_high < src_width)
+        v4 = src + y_high * src_line_size + x_high * 3;
     }
 
     c0 = w1 * v1[0] + w2 * v2[0] + w3 * v3[0] + w4 * v4[0];
@@ -104,15 +109,15 @@ __global__ void YoloPreprocessCudaKernel(
 
   // rgbrgbrgb to rrrgggbbb
   int area = dst_width * dst_height;
-  float* pdst_c0 = dst + dy * dst_width + dx;
-  float* pdst_c1 = pdst_c0 + area;
-  float* pdst_c2 = pdst_c1 + area;
+  float *pdst_c0 = dst + dy * dst_width + dx;
+  float *pdst_c1 = pdst_c0 + area;
+  float *pdst_c2 = pdst_c1 + area;
   *pdst_c0 = c0;
   *pdst_c1 = c1;
   *pdst_c2 = c2;
 }
 
-void CudaYoloPreprocess(uint8_t* src, int src_width, int src_height, float* dst,
+void CudaYoloPreprocess(uint8_t *src, int src_width, int src_height, float *dst,
                         int dst_width, int dst_height,
                         const std::vector<float> padding_value,
                         cudaStream_t stream) {
@@ -141,7 +146,6 @@ void CudaYoloPreprocess(uint8_t* src, int src_width, int src_height, float* dst,
       padding_value[0], padding_value[1], padding_value[2], d2s, jobs);
 }
 
-}  // namespace utils
-}  // namespace vision
-}  // namespace fastdeploy
-#endif
+} // namespace utils
+} // namespace vision
+} // namespace fastdeploy

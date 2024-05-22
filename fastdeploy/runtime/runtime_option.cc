@@ -46,36 +46,36 @@ void RuntimeOption::SetEncryptionKey(const std::string& encryption_key) {
 }
 
 void RuntimeOption::UseGpu(int gpu_id) {
-#if defined(WITH_GPU) || defined(WITH_OPENCL)
+// #if defined(WITH_GPU) || defined(WITH_OPENCL)
   device = Device::GPU;
   device_id = gpu_id;
 
-#if defined(WITH_OPENCL) && defined(ENABLE_LITE_BACKEND)
-  paddle_lite_option.device = device;
-#endif
+// #if defined(WITH_OPENCL) && defined(ENABLE_LITE_BACKEND)
+//   paddle_lite_option.device = device;
+// #endif
 
-#else
-  FDWARNING << "The FastDeploy didn't compile with GPU, will force to use CPU."
-            << std::endl;
-  device = Device::CPU;
-#endif
+// #else
+//   FDWARNING << "The FastDeploy didn't compile with GPU, will force to use CPU."
+//             << std::endl;
+//   device = Device::CPU;
+// #endif
 }
 
 void RuntimeOption::UseCpu() { device = Device::CPU; }
 
-void RuntimeOption::UseRKNPU2(fastdeploy::rknpu2::CpuName rknpu2_name,
-                              fastdeploy::rknpu2::CoreMask rknpu2_core) {
-  rknpu2_option.cpu_name = rknpu2_name;
-  rknpu2_option.core_mask = rknpu2_core;
-  device = Device::RKNPU;
-}
+// void RuntimeOption::UseRKNPU2(fastdeploy::rknpu2::CpuName rknpu2_name,
+//                               fastdeploy::rknpu2::CoreMask rknpu2_core) {
+//   rknpu2_option.cpu_name = rknpu2_name;
+//   rknpu2_option.core_mask = rknpu2_core;
+//   device = Device::RKNPU;
+// }
 
 void RuntimeOption::UseHorizon() { device = Device::SUNRISENPU; }
 
-void RuntimeOption::UseTimVX() {
-  device = Device::TIMVX;
-  paddle_lite_option.device = device;
-}
+// void RuntimeOption::UseTimVX() {
+//   device = Device::TIMVX;
+//   paddle_lite_option.device = device;
+// }
 
 void RuntimeOption::UseKunlunXin(int kunlunxin_id, 
                                  int l3_workspace_size,
@@ -136,10 +136,10 @@ void RuntimeOption::UseIpu(int device_num, int micro_batch_size,
 #endif
 }
 
-void RuntimeOption::UseAscend() {
-  device = Device::ASCEND;
-  paddle_lite_option.device = device;
-}
+// void RuntimeOption::UseAscend() {
+//   device = Device::ASCEND;
+//   paddle_lite_option.device = device;
+// }
 
 void RuntimeOption::UseDirectML() { device = Device::DIRECTML; }
 
@@ -152,26 +152,26 @@ void RuntimeOption::SetExternalStream(void* external_stream) {
   external_stream_ = external_stream;
 }
 
-void RuntimeOption::SetCpuThreadNum(int thread_num) {
-  FDASSERT(thread_num > 0, "The thread_num must be greater than 0.");
-  cpu_thread_num = thread_num;
-  paddle_lite_option.cpu_threads = thread_num;
-  ort_option.intra_op_num_threads = thread_num;
-  openvino_option.cpu_thread_num = thread_num;
-  paddle_infer_option.cpu_thread_num = thread_num;
-}
+// void RuntimeOption::SetCpuThreadNum(int thread_num) {
+//   FDASSERT(thread_num > 0, "The thread_num must be greater than 0.");
+//   cpu_thread_num = thread_num;
+//   paddle_lite_option.cpu_threads = thread_num;
+//   ort_option.intra_op_num_threads = thread_num;
+//   openvino_option.cpu_thread_num = thread_num;
+//   paddle_infer_option.cpu_thread_num = thread_num;
+// }
 
-void RuntimeOption::SetOrtGraphOptLevel(int level) {
-  FDWARNING << "`RuntimeOption::SetOrtGraphOptLevel` will be removed in "
-               "v1.2.0, please modify its member variables directly, e.g "
-               "`runtime_option.ort_option.graph_optimization_level = 99`."
-            << std::endl;
-  std::vector<int> supported_level{-1, 0, 1, 2};
-  auto valid_level = std::find(supported_level.begin(), supported_level.end(),
-                               level) != supported_level.end();
-  FDASSERT(valid_level, "The level must be -1, 0, 1, 2.");
-  ort_option.graph_optimization_level = level;
-}
+// void RuntimeOption::SetOrtGraphOptLevel(int level) {
+//   FDWARNING << "`RuntimeOption::SetOrtGraphOptLevel` will be removed in "
+//                "v1.2.0, please modify its member variables directly, e.g "
+//                "`runtime_option.ort_option.graph_optimization_level = 99`."
+//             << std::endl;
+//   std::vector<int> supported_level{-1, 0, 1, 2};
+//   auto valid_level = std::find(supported_level.begin(), supported_level.end(),
+//                                level) != supported_level.end();
+//   FDASSERT(valid_level, "The level must be -1, 0, 1, 2.");
+//   ort_option.graph_optimization_level = level;
+// }
 
 // use paddle inference backend
 void RuntimeOption::UsePaddleBackend() {
@@ -210,11 +210,11 @@ void RuntimeOption::UsePorosBackend() {
 }
 
 void RuntimeOption::UseTrtBackend() {
-#ifdef ENABLE_TRT_BACKEND
+// #ifdef ENABLE_TRT_BACKEND
   backend = Backend::TRT;
-#else
-  FDASSERT(false, "The FastDeploy didn't compile with TrtBackend.");
-#endif
+// #else
+//   FDASSERT(false, "The FastDeploy didn't compile with TrtBackend.");
+// #endif
 }
 
 void RuntimeOption::UseOpenVINOBackend() {
@@ -241,36 +241,36 @@ void RuntimeOption::UseHorizonNPUBackend() {
 #endif
 }
 
-void RuntimeOption::SetPaddleMKLDNN(bool pd_mkldnn) {
-  FDWARNING << "`RuntimeOption::SetPaddleMKLDNN` will be removed in v1.2.0, "
-               "please modify its member variable directly, e.g "
-               "`option.paddle_infer_option.enable_mkldnn = true`"
-            << std::endl;
-  paddle_infer_option.enable_mkldnn = pd_mkldnn;
-}
+// void RuntimeOption::SetPaddleMKLDNN(bool pd_mkldnn) {
+//   FDWARNING << "`RuntimeOption::SetPaddleMKLDNN` will be removed in v1.2.0, "
+//                "please modify its member variable directly, e.g "
+//                "`option.paddle_infer_option.enable_mkldnn = true`"
+//             << std::endl;
+//   paddle_infer_option.enable_mkldnn = pd_mkldnn;
+// }
 
-void RuntimeOption::DeletePaddleBackendPass(const std::string& pass_name) {
-  FDWARNING
-      << "`RuntimeOption::DeletePaddleBackendPass` will be removed in v1.2.0, "
-         "please use `option.paddle_infer_option.DeletePass` instead."
-      << std::endl;
-  paddle_infer_option.DeletePass(pass_name);
-}
-void RuntimeOption::EnablePaddleLogInfo() {
-  FDWARNING << "`RuntimeOption::EnablePaddleLogInfo` will be removed in "
-               "v1.2.0, please modify its member variable directly, e.g "
-               "`option.paddle_infer_option.enable_log_info = true`"
-            << std::endl;
-  paddle_infer_option.enable_log_info = true;
-}
+// void RuntimeOption::DeletePaddleBackendPass(const std::string& pass_name) {
+//   FDWARNING
+//       << "`RuntimeOption::DeletePaddleBackendPass` will be removed in v1.2.0, "
+//          "please use `option.paddle_infer_option.DeletePass` instead."
+//       << std::endl;
+//   paddle_infer_option.DeletePass(pass_name);
+// }
+// void RuntimeOption::EnablePaddleLogInfo() {
+//   FDWARNING << "`RuntimeOption::EnablePaddleLogInfo` will be removed in "
+//                "v1.2.0, please modify its member variable directly, e.g "
+//                "`option.paddle_infer_option.enable_log_info = true`"
+//             << std::endl;
+//   paddle_infer_option.enable_log_info = true;
+// }
 
-void RuntimeOption::DisablePaddleLogInfo() {
-  FDWARNING << "`RuntimeOption::DisablePaddleLogInfo` will be removed in "
-               "v1.2.0, please modify its member variable directly, e.g "
-               "`option.paddle_infer_option.enable_log_info = false`"
-            << std::endl;
-  paddle_infer_option.enable_log_info = false;
-}
+// void RuntimeOption::DisablePaddleLogInfo() {
+//   FDWARNING << "`RuntimeOption::DisablePaddleLogInfo` will be removed in "
+//                "v1.2.0, please modify its member variable directly, e.g "
+//                "`option.paddle_infer_option.enable_log_info = false`"
+//             << std::endl;
+//   paddle_infer_option.enable_log_info = false;
+// }
 
 void RuntimeOption::EnablePaddleToTrt() {
 #ifdef ENABLE_PADDLE_BACKEND
@@ -291,37 +291,37 @@ void RuntimeOption::EnablePaddleToTrt() {
 #endif
 }
 
-void RuntimeOption::SetPaddleMKLDNNCacheSize(int size) {
-  FDWARNING << "`RuntimeOption::SetPaddleMKLDNNCacheSize` will be removed in "
-               "v1.2.0, please modify its member variable directly, e.g "
-               "`option.paddle_infer_option.mkldnn_cache_size = size`."
-            << std::endl;
-  paddle_infer_option.mkldnn_cache_size = size;
-}
+// void RuntimeOption::SetPaddleMKLDNNCacheSize(int size) {
+//   FDWARNING << "`RuntimeOption::SetPaddleMKLDNNCacheSize` will be removed in "
+//                "v1.2.0, please modify its member variable directly, e.g "
+//                "`option.paddle_infer_option.mkldnn_cache_size = size`."
+//             << std::endl;
+//   paddle_infer_option.mkldnn_cache_size = size;
+// }
 
-void RuntimeOption::SetOpenVINODevice(const std::string& name) {
-  FDWARNING << "`RuntimeOption::SetOpenVINODevice` will be removed in v1.2.0, "
-               "please use `RuntimeOption.openvino_option.SetDeivce(const "
-               "std::string&)` instead."
-            << std::endl;
-  openvino_option.SetDevice(name);
-}
+// void RuntimeOption::SetOpenVINODevice(const std::string& name) {
+//   FDWARNING << "`RuntimeOption::SetOpenVINODevice` will be removed in v1.2.0, "
+//                "please use `RuntimeOption.openvino_option.SetDeivce(const "
+//                "std::string&)` instead."
+//             << std::endl;
+//   openvino_option.SetDevice(name);
+// }
 
-void RuntimeOption::EnableLiteFP16() {
-  FDWARNING << "`RuntimeOption::EnableLiteFP16` will be removed in v1.2.0, "
-               "please modify its member variables directly, e.g "
-               "`runtime_option.paddle_lite_option.enable_fp16 = true`"
-            << std::endl;
-  paddle_lite_option.enable_fp16 = true;
-}
+// void RuntimeOption::EnableLiteFP16() {
+//   FDWARNING << "`RuntimeOption::EnableLiteFP16` will be removed in v1.2.0, "
+//                "please modify its member variables directly, e.g "
+//                "`runtime_option.paddle_lite_option.enable_fp16 = true`"
+//             << std::endl;
+//   paddle_lite_option.enable_fp16 = true;
+// }
 
-void RuntimeOption::DisableLiteFP16() {
-  FDWARNING << "`RuntimeOption::EnableLiteFP16` will be removed in v1.2.0, "
-               "please modify its member variables directly, e.g "
-               "`runtime_option.paddle_lite_option.enable_fp16 = false`"
-            << std::endl;
-  paddle_lite_option.enable_fp16 = false;
-}
+// void RuntimeOption::DisableLiteFP16() {
+//   FDWARNING << "`RuntimeOption::EnableLiteFP16` will be removed in v1.2.0, "
+//                "please modify its member variables directly, e.g "
+//                "`runtime_option.paddle_lite_option.enable_fp16 = false`"
+//             << std::endl;
+//   paddle_lite_option.enable_fp16 = false;
+// }
 
 void RuntimeOption::EnableLiteInt8() {
   FDWARNING << "RuntimeOption::EnableLiteInt8 is a useless api, this calling "
@@ -339,91 +339,91 @@ void RuntimeOption::DisableLiteInt8() {
             << std::endl;
 }
 
-void RuntimeOption::SetLitePowerMode(LitePowerMode mode) {
-  FDWARNING << "`RuntimeOption::SetLitePowerMode` will be removed in v1.2.0, "
-               "please modify its member variable directly, e.g "
-               "`runtime_option.paddle_lite_option.power_mode = 3;`"
-            << std::endl;
-  paddle_lite_option.power_mode = mode;
-}
+// void RuntimeOption::SetLitePowerMode(LitePowerMode mode) {
+//   FDWARNING << "`RuntimeOption::SetLitePowerMode` will be removed in v1.2.0, "
+//                "please modify its member variable directly, e.g "
+//                "`runtime_option.paddle_lite_option.power_mode = 3;`"
+//             << std::endl;
+//   paddle_lite_option.power_mode = mode;
+// }
 
-void RuntimeOption::SetLiteOptimizedModelDir(
-    const std::string& optimized_model_dir) {
-  FDWARNING
-      << "`RuntimeOption::SetLiteOptimizedModelDir` will be removed in v1.2.0, "
-         "please modify its member variable directly, e.g "
-         "`runtime_option.paddle_lite_option.optimized_model_dir = \"...\"`"
-      << std::endl;
-  paddle_lite_option.optimized_model_dir = optimized_model_dir;
-}
+// void RuntimeOption::SetLiteOptimizedModelDir(
+//     const std::string& optimized_model_dir) {
+//   FDWARNING
+//       << "`RuntimeOption::SetLiteOptimizedModelDir` will be removed in v1.2.0, "
+//          "please modify its member variable directly, e.g "
+//          "`runtime_option.paddle_lite_option.optimized_model_dir = \"...\"`"
+//       << std::endl;
+//   paddle_lite_option.optimized_model_dir = optimized_model_dir;
+// }
 
-void RuntimeOption::SetLiteSubgraphPartitionPath(
-    const std::string& nnadapter_subgraph_partition_config_path) {
-  FDWARNING << "`RuntimeOption::SetLiteSubgraphPartitionPath` will be removed "
-               "in v1.2.0, please modify its member variable directly, e.g "
-               "`runtime_option.paddle_lite_option.nnadapter_subgraph_"
-               "partition_config_path = \"...\";` "
-            << std::endl;
-  paddle_lite_option.nnadapter_subgraph_partition_config_path =
-      nnadapter_subgraph_partition_config_path;
-}
+// void RuntimeOption::SetLiteSubgraphPartitionPath(
+//     const std::string& nnadapter_subgraph_partition_config_path) {
+//   FDWARNING << "`RuntimeOption::SetLiteSubgraphPartitionPath` will be removed "
+//                "in v1.2.0, please modify its member variable directly, e.g "
+//                "`runtime_option.paddle_lite_option.nnadapter_subgraph_"
+//                "partition_config_path = \"...\";` "
+//             << std::endl;
+//   paddle_lite_option.nnadapter_subgraph_partition_config_path =
+//       nnadapter_subgraph_partition_config_path;
+// }
 
-void RuntimeOption::SetLiteSubgraphPartitionConfigBuffer(
-    const std::string& nnadapter_subgraph_partition_config_buffer) {
-  FDWARNING
-      << "`RuntimeOption::SetLiteSubgraphPartitionConfigBuffer` will be "
-         "removed in v1.2.0, please modify its member variable directly, e.g "
-         "`runtime_option.paddle_lite_option.nnadapter_subgraph_partition_"
-         "config_buffer = ...`"
-      << std::endl;
-  paddle_lite_option.nnadapter_subgraph_partition_config_buffer =
-      nnadapter_subgraph_partition_config_buffer;
-}
+// void RuntimeOption::SetLiteSubgraphPartitionConfigBuffer(
+//     const std::string& nnadapter_subgraph_partition_config_buffer) {
+//   FDWARNING
+//       << "`RuntimeOption::SetLiteSubgraphPartitionConfigBuffer` will be "
+//          "removed in v1.2.0, please modify its member variable directly, e.g "
+//          "`runtime_option.paddle_lite_option.nnadapter_subgraph_partition_"
+//          "config_buffer = ...`"
+//       << std::endl;
+//   paddle_lite_option.nnadapter_subgraph_partition_config_buffer =
+//       nnadapter_subgraph_partition_config_buffer;
+// }
 
-void RuntimeOption::SetLiteContextProperties(
-    const std::string& nnadapter_context_properties) {
-  FDWARNING << "`RuntimeOption::SetLiteContextProperties` will be removed in "
-               "v1.2.0, please modify its member variable directly, e.g "
-               "`runtime_option.paddle_lite_option.nnadapter_context_"
-               "properties = ...`"
-            << std::endl;
-  paddle_lite_option.nnadapter_context_properties =
-      nnadapter_context_properties;
-}
+// void RuntimeOption::SetLiteContextProperties(
+//     const std::string& nnadapter_context_properties) {
+//   FDWARNING << "`RuntimeOption::SetLiteContextProperties` will be removed in "
+//                "v1.2.0, please modify its member variable directly, e.g "
+//                "`runtime_option.paddle_lite_option.nnadapter_context_"
+//                "properties = ...`"
+//             << std::endl;
+//   paddle_lite_option.nnadapter_context_properties =
+//       nnadapter_context_properties;
+// }
 
-void RuntimeOption::SetLiteModelCacheDir(
-    const std::string& nnadapter_model_cache_dir) {
-  FDWARNING
-      << "`RuntimeOption::SetLiteModelCacheDir` will be removed in v1.2.0, "
-         "please modify its member variable directly, e.g "
-         "`runtime_option.paddle_lite_option.nnadapter_model_cache_dir = ...`"
-      << std::endl;
-  paddle_lite_option.nnadapter_model_cache_dir = nnadapter_model_cache_dir;
-}
+// void RuntimeOption::SetLiteModelCacheDir(
+//     const std::string& nnadapter_model_cache_dir) {
+//   FDWARNING
+//       << "`RuntimeOption::SetLiteModelCacheDir` will be removed in v1.2.0, "
+//          "please modify its member variable directly, e.g "
+//          "`runtime_option.paddle_lite_option.nnadapter_model_cache_dir = ...`"
+//       << std::endl;
+//   paddle_lite_option.nnadapter_model_cache_dir = nnadapter_model_cache_dir;
+// }
 
-void RuntimeOption::SetLiteDynamicShapeInfo(
-    const std::map<std::string, std::vector<std::vector<int64_t>>>&
-        nnadapter_dynamic_shape_info) {
-  FDWARNING << "`RuntimeOption::SetLiteDynamicShapeInfo` will be removed in "
-               "v1.2.0, please modify its member variable directly, e.g "
-               "`runtime_option.paddle_lite_option.paddle_lite_option."
-               "nnadapter_dynamic_shape_info = ...`"
-            << std::endl;
-  paddle_lite_option.nnadapter_dynamic_shape_info =
-      nnadapter_dynamic_shape_info;
-}
+// void RuntimeOption::SetLiteDynamicShapeInfo(
+//     const std::map<std::string, std::vector<std::vector<int64_t>>>&
+//         nnadapter_dynamic_shape_info) {
+//   FDWARNING << "`RuntimeOption::SetLiteDynamicShapeInfo` will be removed in "
+//                "v1.2.0, please modify its member variable directly, e.g "
+//                "`runtime_option.paddle_lite_option.paddle_lite_option."
+//                "nnadapter_dynamic_shape_info = ...`"
+//             << std::endl;
+//   paddle_lite_option.nnadapter_dynamic_shape_info =
+//       nnadapter_dynamic_shape_info;
+// }
 
-void RuntimeOption::SetLiteMixedPrecisionQuantizationConfigPath(
-    const std::string& nnadapter_mixed_precision_quantization_config_path) {
-  FDWARNING
-      << "`RuntimeOption::SetLiteMixedPrecisionQuantizationConfigPath` will be "
-         "removed in v1.2.0, please modify its member variable directly, e.g "
-         "`runtime_option.paddle_lite_option.paddle_lite_option.nnadapter_"
-         "mixed_precision_quantization_config_path = ...`"
-      << std::endl;
-  paddle_lite_option.nnadapter_mixed_precision_quantization_config_path =
-      nnadapter_mixed_precision_quantization_config_path;
-}
+// void RuntimeOption::SetLiteMixedPrecisionQuantizationConfigPath(
+//     const std::string& nnadapter_mixed_precision_quantization_config_path) {
+//   FDWARNING
+//       << "`RuntimeOption::SetLiteMixedPrecisionQuantizationConfigPath` will be "
+//          "removed in v1.2.0, please modify its member variable directly, e.g "
+//          "`runtime_option.paddle_lite_option.paddle_lite_option.nnadapter_"
+//          "mixed_precision_quantization_config_path = ...`"
+//       << std::endl;
+//   paddle_lite_option.nnadapter_mixed_precision_quantization_config_path =
+//       nnadapter_mixed_precision_quantization_config_path;
+// }
 
 void RuntimeOption::SetTrtInputShape(const std::string& input_name,
                                      const std::vector<int32_t>& min_shape,
@@ -489,37 +489,37 @@ void RuntimeOption::SetTrtCacheFile(const std::string& cache_file_path) {
   trt_option.serialize_file = cache_file_path;
 }
 
-void RuntimeOption::SetOpenVINOStreams(int num_streams) {
-  FDWARNING << "`RuntimeOption::SetOpenVINOStreams` will be removed in v1.2.0, "
-               "please modify its member variable directly, e.g "
-               "`runtime_option.openvino_option.num_streams = "
-            << num_streams << "`." << std::endl;
-  openvino_option.num_streams = num_streams;
-}
+// void RuntimeOption::SetOpenVINOStreams(int num_streams) {
+//   FDWARNING << "`RuntimeOption::SetOpenVINOStreams` will be removed in v1.2.0, "
+//                "please modify its member variable directly, e.g "
+//                "`runtime_option.openvino_option.num_streams = "
+//             << num_streams << "`." << std::endl;
+//   openvino_option.num_streams = num_streams;
+// }
 
-void RuntimeOption::EnablePaddleTrtCollectShape() {
-  FDWARNING << "`RuntimeOption::EnablePaddleTrtCollectShape` will be removed "
-               "in v1.2.0, please modify its member variable directly, e.g "
-               "runtime_option.paddle_infer_option.collect_trt_shape = true`."
-            << std::endl;
-  paddle_infer_option.collect_trt_shape = true;
-}
+// void RuntimeOption::EnablePaddleTrtCollectShape() {
+//   FDWARNING << "`RuntimeOption::EnablePaddleTrtCollectShape` will be removed "
+//                "in v1.2.0, please modify its member variable directly, e.g "
+//                "runtime_option.paddle_infer_option.collect_trt_shape = true`."
+//             << std::endl;
+//   paddle_infer_option.collect_trt_shape = true;
+// }
 
-void RuntimeOption::DisablePaddleTrtCollectShape() {
-  FDWARNING << "`RuntimeOption::DisablePaddleTrtCollectShape` will be removed "
-               "in v1.2.0, please modify its member variable directly, e.g "
-               "runtime_option.paddle_infer_option.collect_trt_shape = false`."
-            << std::endl;
-  paddle_infer_option.collect_trt_shape = false;
-}
+// void RuntimeOption::DisablePaddleTrtCollectShape() {
+//   FDWARNING << "`RuntimeOption::DisablePaddleTrtCollectShape` will be removed "
+//                "in v1.2.0, please modify its member variable directly, e.g "
+//                "runtime_option.paddle_infer_option.collect_trt_shape = false`."
+//             << std::endl;
+//   paddle_infer_option.collect_trt_shape = false;
+// }
 
-void RuntimeOption::DisablePaddleTrtOPs(const std::vector<std::string>& ops) {
-  FDWARNING << "`RuntimeOption::DisablePaddleTrtOps` will be removed in "
-               "v.1.20, please use "
-               "`runtime_option.paddle_infer_option.DisableTrtOps` instead."
-            << std::endl;
-  paddle_infer_option.DisableTrtOps(ops);
-}
+// void RuntimeOption::DisablePaddleTrtOPs(const std::vector<std::string>& ops) {
+//   FDWARNING << "`RuntimeOption::DisablePaddleTrtOps` will be removed in "
+//                "v.1.20, please use "
+//                "`runtime_option.paddle_infer_option.DisableTrtOps` instead."
+//             << std::endl;
+//   paddle_infer_option.DisableTrtOps(ops);
+// }
 
 void RuntimeOption::UseTVMBackend() {
 #ifdef ENABLE_TVM_BACKEND

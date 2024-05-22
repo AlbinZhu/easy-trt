@@ -18,7 +18,7 @@ namespace fastdeploy {
 namespace vision {
 namespace utils {
 
-float CosineSimilarity(const std::vector<float>& a, const std::vector<float>& b,
+float CosineSimilarity(const std::vector<float> &a, const std::vector<float> &b,
                        bool normalized) {
   FDASSERT((a.size() == b.size()) && (a.size() != 0),
            "The size of a and b must be equal and >= 1.");
@@ -43,6 +43,6 @@ float CosineSimilarity(const std::vector<float>& a, const std::vector<float>& b,
   return (mul_ab / (std::sqrt(mul_a) * std::sqrt(mul_b)));
 }
 
-}  // namespace utils
-}  // namespace vision
-}  // namespace fastdeploy
+} // namespace utils
+} // namespace vision
+} // namespace fastdeploy

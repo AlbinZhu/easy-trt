@@ -20,7 +20,7 @@
 namespace fastdeploy {
 namespace vision {
 
-cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
+cv::Mat VisDetection(const cv::Mat &im, const DetectionResult &result,
                      float score_threshold, int line_size, float font_size) {
   if (result.boxes.empty() && result.rotated_boxes.empty()) {
     return im;
@@ -110,8 +110,8 @@ cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
       int mask_h = static_cast<int>(result.masks[i].shape[0]);
       int mask_w = static_cast<int>(result.masks[i].shape[1]);
       // non-const pointer for cv:Mat constructor
-      uint8_t* mask_raw_data = const_cast<uint8_t*>(
-          static_cast<const uint8_t*>(result.masks[i].Data()));
+      uint8_t *mask_raw_data = const_cast<uint8_t *>(
+          static_cast<const uint8_t *>(result.masks[i].Data()));
       // only reference to mask data (zero copy)
       cv::Mat mask(mask_h, mask_w, CV_8UC1, mask_raw_data);
       if ((mask_h != box_h) || (mask_w != box_w)) {
@@ -121,9 +121,9 @@ cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
       int mc0 = 255 - c0 >= 127 ? 255 - c0 : 127;
       int mc1 = 255 - c1 >= 127 ? 255 - c1 : 127;
       int mc2 = 255 - c2 >= 127 ? 255 - c2 : 127;
-      uint8_t* mask_data = reinterpret_cast<uint8_t*>(mask.data);
+      uint8_t *mask_data = reinterpret_cast<uint8_t *>(mask.data);
       // inplace blending (zero copy)
-      uchar* vis_im_data = static_cast<uchar*>(vis_im.data);
+      uchar *vis_im_data = static_cast<uchar *>(vis_im.data);
       for (size_t i = y1; i < y2; ++i) {
         for (size_t j = x1; j < x2; ++j) {
           if (mask_data[(i - y1) * mask_w + (j - x1)] != 0) {
@@ -145,8 +145,8 @@ cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
 }
 
 // Visualize DetectionResult with custom labels.
-cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
-                     const std::vector<std::string>& labels,
+cv::Mat VisDetection(const cv::Mat &im, const DetectionResult &result,
+                     const std::vector<std::string> &labels,
                      float score_threshold, int line_size, float font_size,
                      std::vector<int> font_color, int font_thickness) {
   if (result.boxes.empty()) {
@@ -247,8 +247,8 @@ cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
       int mask_h = static_cast<int>(result.masks[i].shape[0]);
       int mask_w = static_cast<int>(result.masks[i].shape[1]);
       // non-const pointer for cv:Mat constructor
-      int32_t* mask_raw_data = const_cast<int32_t*>(
-          static_cast<const int32_t*>(result.masks[i].Data()));
+      int32_t *mask_raw_data = const_cast<int32_t *>(
+          static_cast<const int32_t *>(result.masks[i].Data()));
       // only reference to mask data (zero copy)
       cv::Mat mask(mask_h, mask_w, CV_32SC1, mask_raw_data);
       if ((mask_h != box_h) || (mask_w != box_w)) {
@@ -258,9 +258,9 @@ cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
       int mc0 = 255 - c0 >= 127 ? 255 - c0 : 127;
       int mc1 = 255 - c1 >= 127 ? 255 - c1 : 127;
       int mc2 = 255 - c2 >= 127 ? 255 - c2 : 127;
-      int32_t* mask_data = reinterpret_cast<int32_t*>(mask.data);
+      int32_t *mask_data = reinterpret_cast<int32_t *>(mask.data);
       // inplace blending (zero copy)
-      uchar* vis_im_data = static_cast<uchar*>(vis_im.data);
+      uchar *vis_im_data = static_cast<uchar *>(vis_im.data);
       for (size_t i = y1; i < y2; ++i) {
         for (size_t j = x1; j < x2; ++j) {
           if (mask_data[(i - y1) * mask_w + (j - x1)] != 0) {
@@ -284,8 +284,8 @@ cv::Mat VisDetection(const cv::Mat& im, const DetectionResult& result,
 // Default only support visualize num_classes <= 1000
 // If need to visualize num_classes > 1000
 // Please call Visualize::GetColorMap(num_classes) first
-cv::Mat Visualize::VisDetection(const cv::Mat& im,
-                                const DetectionResult& result,
+cv::Mat Visualize::VisDetection(const cv::Mat &im,
+                                const DetectionResult &result,
                                 float score_threshold, int line_size,
                                 float font_size) {
   if (result.boxes.empty()) {
@@ -336,8 +336,8 @@ cv::Mat Visualize::VisDetection(const cv::Mat& im,
       int mask_h = static_cast<int>(result.masks[i].shape[0]);
       int mask_w = static_cast<int>(result.masks[i].shape[1]);
       // non-const pointer for cv:Mat constructor
-      int32_t* mask_raw_data = const_cast<int32_t*>(
-          static_cast<const int32_t*>(result.masks[i].Data()));
+      int32_t *mask_raw_data = const_cast<int32_t *>(
+          static_cast<const int32_t *>(result.masks[i].Data()));
       // only reference to mask data (zero copy)
       cv::Mat mask(mask_h, mask_w, CV_32SC1, mask_raw_data);
       if ((mask_h != box_h) || (mask_w != box_w)) {
@@ -347,9 +347,9 @@ cv::Mat Visualize::VisDetection(const cv::Mat& im,
       int mc0 = 255 - c0 >= 127 ? 255 - c0 : 127;
       int mc1 = 255 - c1 >= 127 ? 255 - c1 : 127;
       int mc2 = 255 - c2 >= 127 ? 255 - c2 : 127;
-      int32_t* mask_data = reinterpret_cast<int32_t*>(mask.data);
+      int32_t *mask_data = reinterpret_cast<int32_t *>(mask.data);
       // inplace blending (zero copy)
-      uchar* vis_im_data = static_cast<uchar*>(vis_im.data);
+      uchar *vis_im_data = static_cast<uchar *>(vis_im.data);
       for (size_t i = y1; i < y2; ++i) {
         for (size_t j = x1; j < x2; ++j) {
           if (mask_data[(i - y1) * mask_w + (j - x1)] != 0) {
@@ -370,5 +370,5 @@ cv::Mat Visualize::VisDetection(const cv::Mat& im,
   return vis_im;
 }
 
-}  // namespace vision
-}  // namespace fastdeploy
+} // namespace vision
+} // namespace fastdeploy

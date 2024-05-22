@@ -1,0 +1,13 @@
+CompileFlags:
+  Add:
+    - -std=c++14
+    - --cuda-path=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8
+    - -LC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8\\lib
+    - -IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8\\include
+
+  Remove:
+    - -forward-unknown-to-host-compiler
+    - -Xcompiler=-MDd  -Zi -Ob0 -Od /RTC1
+    - -Xcompiler=/W3 /GR /EHsc
+    - -Xcompiler=-FdCMakeFiles\u2net.dir\,-FS
+    # - -Xcompiler=-FdCMakeFiles\easy-trt.dir\,-FS

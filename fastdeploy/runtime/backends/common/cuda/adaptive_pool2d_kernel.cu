@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifdef WITH_GPU
-
-#include "adaptive_pool2d_kernel.h"
+#include "fastdeploy/runtime/backends/common/cuda/adaptive_pool2d_kernel.h"
+#include <cuda_fp16.h>
+#include <string>
+#include <vector>
 
 namespace fastdeploy {
 template <typename T1, typename T2>
-__global__ void CudaCastKernel(const T1* in, T2* out, int edge,
+__global__ void CudaCastKernel(const T1 *in, T2 *out, int edge,
                                int out_bc_offset, int in_bc_offset, int ih,
                                int iw, int oh, int ow, bool is_avg) {
   int position = blockDim.x * blockIdx.x + threadIdx.x;
@@ -58,11 +59,11 @@ __global__ void CudaCastKernel(const T1* in, T2* out, int edge,
       ele_val / static_cast<float>(((hend - hstart) * (wend - wstart))));
 }
 
-void CudaAdaptivePool(const std::vector<int64_t>& input_dims,
-                      const std::vector<int64_t>& output_dims, void* output,
-                      const void* input, void* compute_stream,
-                      const std::string& pooling_type, const std::string& dtype,
-                      const std::string& out_dtype) {
+void CudaAdaptivePool(const std::vector<int64_t> &input_dims,
+                      const std::vector<int64_t> &output_dims, void *output,
+                      const void *input, void *compute_stream,
+                      const std::string &pooling_type, const std::string &dtype,
+                      const std::string &out_dtype) {
   auto casted_compute_stream = reinterpret_cast<cudaStream_t>(compute_stream);
   int out_bc_offset = output_dims[2] * output_dims[3];
   int in_bc_offset = input_dims[2] * input_dims[3];
@@ -75,25 +76,24 @@ void CudaAdaptivePool(const std::vector<int64_t>& input_dims,
   int blocks = ceil(jobs / static_cast<float>(threads));
   if (dtype == "float") {
     CudaCastKernel<float, float><<<blocks, threads, 0, casted_compute_stream>>>(
-        static_cast<const float*>(input), static_cast<float*>(output), jobs,
+        static_cast<const float *>(input), static_cast<float *>(output), jobs,
         out_bc_offset, in_bc_offset, int(input_dims[2]), int(input_dims[3]),
         int(output_dims[2]), int(output_dims[3]), is_avg);
   } else if (dtype == "half") {
     if (out_dtype == "half") {
       CudaCastKernel<half, half><<<blocks, threads, 0, casted_compute_stream>>>(
-          static_cast<const half*>(input), static_cast<half*>(output), jobs,
+          static_cast<const half *>(input), static_cast<half *>(output), jobs,
           out_bc_offset, in_bc_offset, int(input_dims[2]), int(input_dims[3]),
           int(output_dims[2]), int(output_dims[3]), is_avg);
     }
     if (out_dtype == "float") {
       CudaCastKernel<half, float>
           <<<blocks, threads, 0, casted_compute_stream>>>(
-              static_cast<const half*>(input), static_cast<float*>(output),
+              static_cast<const half *>(input), static_cast<float *>(output),
               jobs, out_bc_offset, in_bc_offset, int(input_dims[2]),
               int(input_dims[3]), int(output_dims[2]), int(output_dims[3]),
               is_avg);
     }
   }
 }
-}  // namespace fastdeploy
-#endif
+} // namespace fastdeploy

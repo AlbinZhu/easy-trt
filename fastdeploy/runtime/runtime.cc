@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "runtime.h"
+#include "fastdeploy/runtime/runtime.h"
 
-#include "../utils/unique_ptr.h"
-#include "utils.h"
+#include "fastdeploy/utils/unique_ptr.h"
+#include "fastdeploy/utils/utils.h"
 
 #ifdef ENABLE_ORT_BACKEND
 #include "fastdeploy/runtime/backends/ort/ort_backend.h"
@@ -173,7 +173,7 @@ bool Runtime::Init(const RuntimeOption &_option) {
             << option.backend << " is not supported now." << std::endl;
     return false;
   }
-  backend_->benchmark_option_ = option.benchmark_option;
+  /* backend_->benchmark_option_ = option.benchmark_option; */
   return true;
 }
 
