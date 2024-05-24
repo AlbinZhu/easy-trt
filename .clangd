@@ -10,4 +10,6 @@ CompileFlags:
     - -Xcompiler=-MDd  -Zi -Ob0 -Od /RTC1
     - -Xcompiler=/W3 /GR /EHsc
     - -Xcompiler=-FdCMakeFiles\u2net.dir\,-FS
-    # - -Xcompiler=-FdCMakeFiles\easy-trt.dir\,-FS
+    - -Xcompiler=-FdCMakeFiles\easy-trt.dir\,-FS
+    - -Xcompiler=-MD -O2 -Ob2
+    - -Xcompiler=-FdCMakeFiles\easy-trt.dir\easy-trt.pdb,-FS
