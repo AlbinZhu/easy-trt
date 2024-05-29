@@ -1,6 +1,12 @@
 #pragma once
 #include "common_include.h"
 
+#if defined(_WIN32)
+#define DEPLOY_DECL __declspec(dllexport)
+#else
+#define FASTDEPLOY_DECL __attribute__((visibility("default")))
+#endif // _WIN32
+
 namespace utils {
 namespace dataSets {
 const std::vector<std::string> coco80 = {

@@ -1,5 +1,6 @@
 #include "yolov8.h"
 #include "decode_yolov8.h"
+#include <iostream>
 
 YOLOV8::YOLOV8(const utils::InitParameter &param) : yolo::YOLO(param) {}
 
@@ -31,7 +32,7 @@ bool YOLOV8::init(const std::vector<unsigned char> &trtFile) {
         "images",
         nvinfer1::Dims4(m_param.batch_size, 3, m_param.dst_h, m_param.dst_w));
   }
-  m_output_dims = this->m_context->getTensorShape("output");
+  m_output_dims = this->m_context->getTensorShape("output0");
   m_total_objects = m_output_dims.d[2];
   assert(m_param.batch_size <= m_output_dims.d[0]);
   m_output_area = 1;
@@ -102,6 +103,7 @@ void YOLOV8::postprocess(const std::vector<cv::Mat> &imgsBatch) {
         std::min((int)(m_output_objects_host +
                        bi * (m_param.topK * m_output_objects_width + 1))[0],
                  m_param.topK);
+    std::cout << "num_boxes: " << num_boxes << std::endl;
     for (size_t i = 0; i < num_boxes; i++) {
       float *ptr = m_output_objects_host +
                    bi * (m_param.topK * m_output_objects_width + 1) +
