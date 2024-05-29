@@ -13,3 +13,4 @@ CompileFlags:
     - -Xcompiler=-FdCMakeFiles\easy-trt.dir\,-FS
     - -Xcompiler=-MD -O2 -Ob2
     - -Xcompiler=-FdCMakeFiles\easy-trt.dir\easy-trt.pdb,-FS
+    - -Xcompiler=-MD  -Zi -O2 -Ob1
