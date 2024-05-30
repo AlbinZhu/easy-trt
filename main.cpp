@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
   utils::InitParameter param;
   setParameters(param);
   // path
-  std::string model_path = "D:/TensorRT-8.6.1.6/bin/yolov8n.trt";
+  std::string model_path = "D:/TensorRT-8.6.1.6/bin/yolov10n.trt";
   std::string video_path = "../../data/people.mp4";
   std::string image_path = "D:/project/ultralytics/ultralytics/assets/bus.jpg";
   // camera' id
