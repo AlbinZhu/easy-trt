@@ -53,7 +53,7 @@ add_library(${PROJECT_NAME} SHARED
         utils/kernel_function.cu
         # utils/utils.cpp
         # utils/yolo.cpp
-        decode_yolov8.cu
+        decode_yolov10.cu
         ${TRT_DIR}/samples/common/logger.cpp
         # yolov8.cpp
         # ${TRT_DIR}/samples/common/sampleOptions.cpp
@@ -65,13 +65,13 @@ target_link_libraries(${PROJECT_NAME}
         ${CUDA_LIBS}
         # ${CUDA_LIBRARIES}
         ${OpenCV_LIBS})
-add_executable(app_yolov8 main.cpp
+add_executable(app_yolov10 main.cpp
 utils/yolo.cpp
 utils/utils.cpp
-yolov8.cpp
+yolov10.cpp
         ${TRT_DIR}/samples/common/logger.cpp
 )
-target_link_libraries(app_yolov8
+target_link_libraries(app_yolov10
         D:/project/easy-trt/build/easy-trt.lib
         nvinfer
         nvonnxparser

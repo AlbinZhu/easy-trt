@@ -1,12 +1,12 @@
-#include "yolov8.h"
-#include "decode_yolov8.h"
+#include "yolov10.h"
+#include "decode_yolov10.h"
 #include <iostream>
 
-YOLOV8::YOLOV8(const utils::InitParameter &param) : yolo::YOLO(param) {}
+YOLOV10::YOLOV10(const utils::InitParameter &param) : yolo::YOLO(param) {}
 
-YOLOV8::~YOLOV8() { CHECK(cudaFree(m_output_src_transpose_device)); }
+YOLOV10::~YOLOV10() { CHECK(cudaFree(m_output_src_transpose_device)); }
 
-bool YOLOV8::init(const std::vector<unsigned char> &trtFile) {
+bool YOLOV10::init(const std::vector<unsigned char> &trtFile) {
   if (trtFile.empty()) {
     return false;
   }
@@ -33,8 +33,8 @@ bool YOLOV8::init(const std::vector<unsigned char> &trtFile) {
         nvinfer1::Dims4(m_param.batch_size, 3, m_param.dst_h, m_param.dst_w));
   }
   m_output_dims = this->m_context->getTensorShape("output0");
-  m_total_objects = m_output_dims.d[2];
-  assert(m_param.batch_size <= m_output_dims.d[0]);
+  m_total_objects = m_output_dims.d[1];
+  assert(m_param.batch_size <= m_output_dims.d[1]);
   m_output_area = 1;
   for (int i = 1; i < m_output_dims.nbDims; i++) {
     if (m_output_dims.d[i] != 0) {
@@ -65,7 +65,7 @@ bool YOLOV8::init(const std::vector<unsigned char> &trtFile) {
   return true;
 }
 
-void YOLOV8::preprocess(const std::vector<cv::Mat> &imgsBatch) {
+void YOLOV10::preprocess(const std::vector<cv::Mat> &imgsBatch) {
   resizeDevice(m_param.batch_size, m_input_src_device, m_param.src_w,
                m_param.src_h, m_input_resize_device, m_param.dst_w,
                m_param.dst_h, 114, m_dst2src);
@@ -80,21 +80,20 @@ void YOLOV8::preprocess(const std::vector<cv::Mat> &imgsBatch) {
                 m_param.dst_h);
 }
 
-void YOLOV8::postprocess(const std::vector<cv::Mat> &imgsBatch) {
-  // yolov8::transposeDevice(
+void YOLOV10::postprocess(const std::vector<cv::Mat> &imgsBatch) {
+  // yolov10::transposeDevice(
   //     m_param, m_output_src_device, m_total_objects, 4 + m_param.num_class,
   //     m_total_objects * (4 + m_param.num_class),
   //     m_output_src_transpose_device, 4 + m_param.num_class, m_total_objects);
-  yolov8::decodeDevice(m_param, m_output_src_transpose_device,
-                       4 + m_param.num_class, m_total_objects, m_output_area,
-                       m_output_objects_device, m_output_objects_width,
-                       m_param.topK);
+  yolov10::decodeDevice(m_param, m_output_src_device, 6, m_total_objects,
+                        m_output_area, m_output_objects_device,
+                        m_output_objects_width, m_param.topK);
   // nms
   // nmsDeviceV1(m_param, m_output_objects_device, m_output_objects_width,
   // m_param.topK, m_param.topK * m_output_objects_width + 1);
-  nmsDeviceV2(m_param, m_output_objects_device, m_output_objects_width,
-              m_param.topK, m_param.topK * m_output_objects_width + 1,
-              m_output_idx_device, m_output_conf_device);
+  // nmsDeviceV2(m_param, m_output_objects_device, m_output_objects_width,
+  //             m_param.topK, m_param.topK * m_output_objects_width + 1,
+  //             m_output_idx_device, m_output_conf_device);
   CHECK(cudaMemcpy(m_output_objects_host, m_output_objects_device,
                    m_param.batch_size * sizeof(float) * (1 + 7 * m_param.topK),
                    cudaMemcpyDeviceToHost));

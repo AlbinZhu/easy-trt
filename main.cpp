@@ -1,5 +1,6 @@
 #include "utils/yolo.h"
-#include "yolov8.h"
+#include "yolov10.h"
+#include <opencv2/imgcodecs.hpp>
 
 void setParameters(utils::InitParameter &initParameters) {
   initParameters.class_names = utils::dataSets::coco80;
@@ -15,7 +16,7 @@ void setParameters(utils::InitParameter &initParameters) {
   initParameters.save_path = "";
 }
 
-void task(YOLOV8 &yolo, const utils::InitParameter &param,
+void task(YOLOV10 &yolo, const utils::InitParameter &param,
           std::vector<cv::Mat> &imgsBatch, const int &delayTime,
           const int &batchi, const bool &isShow, const bool &isSave) {
   utils::DeviceTimer d_t0;
@@ -63,7 +64,7 @@ int main(int argc, char **argv) {
   utils::InitParameter param;
   setParameters(param);
   // path
-  std::string model_path = "D:/TensorRT-8.6.1.6/bin/yolov10n.trt";
+  std::string model_path = "D:/TensorRT-8.6.1.6/bin/yolov10x.engine";
   std::string video_path = "../../data/people.mp4";
   std::string image_path = "D:/project/ultralytics/ultralytics/assets/bus.jpg";
   // camera' id
@@ -136,7 +137,7 @@ int main(int argc, char **argv) {
   param.save_path = "./";
   param.src_h = 1080;
   param.src_w = 810;
-  YOLOV8 yolo(param);
+  YOLOV10 yolo(param);
 
   // read model
   std::vector<unsigned char> trt_file = utils::loadModel(model_path);
@@ -150,14 +151,23 @@ int main(int argc, char **argv) {
     return -1;
   }
   yolo.check();
-  cv::Mat frame;
-  std::vector<cv::Mat> imgs_batch;
-  imgs_batch.reserve(param.batch_size);
-  sample::gLogInfo << imgs_batch.capacity() << std::endl;
-  int batchi = 0;
-  auto input = cv::imread(image_path);
-  imgs_batch.emplace_back(input);
-  task(yolo, param, imgs_batch, delay_time, batchi, is_show, is_save);
+
+  for (int i = 0; i < 100; i++) {
+
+    cv::Mat frame;
+    std::vector<cv::Mat> imgs_batch;
+    imgs_batch.reserve(param.batch_size);
+    sample::gLogInfo << imgs_batch.capacity() << std::endl;
+    int batchi = 0;
+    if (i % 2 == 0) {
+      frame = cv::imread("0.jpg");
+    } else {
+      frame = cv::imread("1.jpg");
+    }
+    // auto input = cv::imread(image_path);
+    imgs_batch.emplace_back(frame);
+    task(yolo, param, imgs_batch, delay_time, batchi, false, false);
+  }
   // while (capture.isOpened()) {
   //   if (batchi >= total_batches && source != utils::InputStream::CAMERA) {
   //     break;
