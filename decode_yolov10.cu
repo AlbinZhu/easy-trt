@@ -12,22 +12,6 @@ __global__ void decode_yolov10_device_kernel(int batch_size, int num_class,
     return;
   }
   float *pitem = src + dy * srcArea + dx * srcWidth;
-  // float *class_confidence = pitem + 4;
-  // float confidence = *class_confidence++;
-  // int label = 0;
-  /**
-  for (int i = 1; i < num_class; ++i, ++class_confidence) {
-    if (*class_confidence > confidence) {
-      confidence = *class_confidence;
-      label = i;
-    }
-  }
-  **/
-
-  // label = int(*confidence++);
-  // if (confidence < conf_thresh) {
-  //   return;
-  // }
   float x1 = *pitem++;
   float y1 = *pitem++;
   float x2 = *pitem++;
@@ -40,6 +24,9 @@ __global__ void decode_yolov10_device_kernel(int batch_size, int num_class,
   }
 
   int index = atomicAdd(dst + dy * dstArea, 1);
+  if (index >> topK) {
+    return;
+  }
   float *pout_item = dst + dy * dstArea + 1 + index * dstWidth;
   *pout_item++ = x1;
   *pout_item++ = y1;
@@ -47,7 +34,7 @@ __global__ void decode_yolov10_device_kernel(int batch_size, int num_class,
   *pout_item++ = y2;
   *pout_item++ = confidence;
   *pout_item++ = label;
-  *pout_item++ = 1;
+  //*pout_item++ = 1;
 }
 
 void yolov10::decodeDevice(utils::InitParameter param, float *src, int srcWidth,

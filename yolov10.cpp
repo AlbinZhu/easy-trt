@@ -1,10 +1,7 @@
 #include "yolov10.h"
 #include "decode_yolov10.h"
-#include <iostream>
 
 YOLOV10::YOLOV10(const utils::InitParameter &param) : yolo::YOLO(param) {}
-
-YOLOV10::~YOLOV10() { CHECK(cudaFree(m_output_src_transpose_device)); }
 
 bool YOLOV10::init(const std::vector<unsigned char> &trtFile) {
   if (trtFile.empty()) {
@@ -29,10 +26,11 @@ bool YOLOV10::init(const std::vector<unsigned char> &trtFile) {
   }
   if (m_param.dynamic_batch) {
     this->m_context->setInputShape(
-        "images",
+        this->m_engine->getIOTensorName(0),
         nvinfer1::Dims4(m_param.batch_size, 3, m_param.dst_h, m_param.dst_w));
   }
-  m_output_dims = this->m_context->getTensorShape("output0");
+  m_output_dims =
+      this->m_context->getTensorShape(this->m_engine->getIOTensorName(1));
   m_total_objects = m_output_dims.d[1];
   assert(m_param.batch_size <= m_output_dims.d[1]);
   m_output_area = 1;
@@ -43,8 +41,6 @@ bool YOLOV10::init(const std::vector<unsigned char> &trtFile) {
   }
   CHECK(cudaMalloc(&m_output_src_device,
                    m_param.batch_size * m_output_area * sizeof(float)));
-  CHECK(cudaMalloc(&m_output_src_transpose_device,
-                   m_param.batch_size * m_output_area * sizeof(float)));
   float a = float(m_param.dst_h) / m_param.src_h;
   float b = float(m_param.dst_w) / m_param.src_w;
   float scale = a < b ? a : b;
@@ -53,6 +49,8 @@ bool YOLOV10::init(const std::vector<unsigned char> &trtFile) {
        (-scale * m_param.src_w + m_param.dst_w + scale - 1) * 0.5, 0.f, scale,
        (-scale * m_param.src_h + m_param.dst_h + scale - 1) * 0.5);
   cv::Mat dst2src = cv::Mat::zeros(2, 3, CV_32FC1);
+  std::cout << src2dst.at<float>(0, 1) << "111" << src2dst.at<float>(1, 0)
+            << std::endl;
   cv::invertAffineTransform(src2dst, dst2src);
 
   m_dst2src.v0 = dst2src.ptr<float>(0)[0];
@@ -81,45 +79,26 @@ void YOLOV10::preprocess(const std::vector<cv::Mat> &imgsBatch) {
 }
 
 void YOLOV10::postprocess(const std::vector<cv::Mat> &imgsBatch) {
-  // yolov10::transposeDevice(
-  //     m_param, m_output_src_device, m_total_objects, 4 + m_param.num_class,
-  //     m_total_objects * (4 + m_param.num_class),
-  //     m_output_src_transpose_device, 4 + m_param.num_class, m_total_objects);
   yolov10::decodeDevice(m_param, m_output_src_device, 6, m_total_objects,
                         m_output_area, m_output_objects_device,
                         m_output_objects_width, m_param.topK);
-  // nms
-  // nmsDeviceV1(m_param, m_output_objects_device, m_output_objects_width,
-  // m_param.topK, m_param.topK * m_output_objects_width + 1);
-  // nmsDeviceV2(m_param, m_output_objects_device, m_output_objects_width,
-  //             m_param.topK, m_param.topK * m_output_objects_width + 1,
-  //             m_output_idx_device, m_output_conf_device);
   CHECK(cudaMemcpy(m_output_objects_host, m_output_objects_device,
-                   m_param.batch_size * sizeof(float) * (1 + 7 * m_param.topK),
+                   m_param.batch_size * sizeof(float) * (1 + 6 * m_param.topK),
                    cudaMemcpyDeviceToHost));
   for (size_t bi = 0; bi < imgsBatch.size(); bi++) {
     int num_boxes =
         std::min((int)(m_output_objects_host +
                        bi * (m_param.topK * m_output_objects_width + 1))[0],
                  m_param.topK);
-    std::cout << "num_boxes: " << num_boxes << std::endl;
     for (size_t i = 0; i < num_boxes; i++) {
       float *ptr = m_output_objects_host +
                    bi * (m_param.topK * m_output_objects_width + 1) +
                    m_output_objects_width * i + 1;
-      int keep_flag = ptr[6];
-      if (keep_flag) {
-        float x_lt =
-            m_dst2src.v0 * ptr[0] + m_dst2src.v1 * ptr[1] + m_dst2src.v2;
-        float y_lt =
-            m_dst2src.v3 * ptr[0] + m_dst2src.v4 * ptr[1] + m_dst2src.v5;
-        float x_rb =
-            m_dst2src.v0 * ptr[2] + m_dst2src.v1 * ptr[3] + m_dst2src.v2;
-        float y_rb =
-            m_dst2src.v3 * ptr[2] + m_dst2src.v4 * ptr[3] + m_dst2src.v5;
-        m_objectss[bi].emplace_back(x_lt, y_lt, x_rb, y_rb, ptr[4],
-                                    (int)ptr[5]);
-      }
+      float x_lt = m_dst2src.v0 * ptr[0] + m_dst2src.v1 * ptr[1] + m_dst2src.v2;
+      float y_lt = m_dst2src.v3 * ptr[0] + m_dst2src.v4 * ptr[1] + m_dst2src.v5;
+      float x_rb = m_dst2src.v0 * ptr[2] + m_dst2src.v1 * ptr[3] + m_dst2src.v2;
+      float y_rb = m_dst2src.v3 * ptr[2] + m_dst2src.v4 * ptr[3] + m_dst2src.v5;
+      m_objectss[bi].emplace_back(x_lt, y_lt, x_rb, y_rb, ptr[4], (int)ptr[5]);
     }
   }
 }
