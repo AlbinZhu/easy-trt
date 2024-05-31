@@ -112,14 +112,12 @@ bool yolo::YOLO::init(const std::vector<unsigned char> &trtFile) {
 }
 
 void yolo::YOLO::check() {
-  int idx;
   nvinfer1::Dims dims;
 
   sample::gLogInfo << "the engine's info:" << std::endl;
   for (auto layer_name : m_param.input_output_names) {
-    idx = this->m_engine->getBindingIndex(layer_name.c_str());
-    dims = this->m_engine->getBindingDimensions(idx);
-    sample::gLogInfo << "idx = " << idx << ", " << layer_name << ": ";
+    dims = this->m_engine->getTensorShape(layer_name.c_str());
+    sample::gLogInfo << layer_name << ": ";
     for (int i = 0; i < dims.nbDims; i++) {
       sample::gLogInfo << dims.d[i] << ", ";
     }
@@ -127,9 +125,8 @@ void yolo::YOLO::check() {
   }
   sample::gLogInfo << "the context's info:" << std::endl;
   for (auto layer_name : m_param.input_output_names) {
-    idx = this->m_engine->getBindingIndex(layer_name.c_str());
-    dims = this->m_context->getBindingDimensions(idx);
-    sample::gLogInfo << "idx = " << idx << ", " << layer_name << ": ";
+    dims = this->m_context->getTensorShape(layer_name.c_str());
+    sample::gLogInfo << layer_name << ": ";
     for (int i = 0; i < dims.nbDims; i++) {
       sample::gLogInfo << dims.d[i] << ", ";
     }
