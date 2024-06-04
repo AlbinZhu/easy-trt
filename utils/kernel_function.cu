@@ -1,5 +1,6 @@
 #include "kernel_function.h"
 #include <math.h>
+#include <vector>
 
 bool __check_cuda_runtime(cudaError_t code, const char *op, const char *file,
                           int line) {
@@ -397,8 +398,8 @@ void bgr2rgbDevice(const int &batchSize, float *src, int srcWidth,
 }
 
 void normDevice(const int &batchSize, float *src, int srcWidth, int srcHeight,
-                float *dst, int dstWidth, int dstHeight,
-                utils::InitParameter param) {
+                float *dst, int dstWidth, int dstHeight, float scale,
+                std::vector<float> means, std::vector<float> stds) {
   dim3 block_size(BLOCK_SIZE, BLOCK_SIZE);
   dim3 grid_size((dstWidth * dstHeight * 3 + BLOCK_SIZE - 1) / BLOCK_SIZE,
                  (batchSize + BLOCK_SIZE - 1) / BLOCK_SIZE);
@@ -408,9 +409,8 @@ void normDevice(const int &batchSize, float *src, int srcWidth, int srcHeight,
   int img_height = srcHeight;
   int img_width = srcWidth;
   norm_device_kernel<<<grid_size, block_size, 0, nullptr>>>(
-      src, dst, batchSize, img_height, img_width, img_area, img_volume,
-      param.scale, param.means[0], param.means[1], param.means[2],
-      param.stds[0], param.stds[1], param.stds[2]);
+      src, dst, batchSize, img_height, img_width, img_area, img_volume, scale,
+      means[0], means[1], means[2], stds[0], stds[1], stds[2]);
 }
 
 void hwc2chwDevice(const int &batchSize, float *src, int srcWidth,

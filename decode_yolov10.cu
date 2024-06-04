@@ -18,7 +18,7 @@ __global__ void decode_yolov10_device_kernel(int batch_size, int num_class,
   float y2 = *pitem++;
   float confidence = *pitem++;
   int label = int(*pitem++);
-
+  printf("config:%f  \n", confidence);
   if (confidence < conf_thresh) {
     return;
   }

@@ -7,7 +7,6 @@ project(easy-trt VERSION 0.1.0 LANGUAGES C CXX CUDA)
 
 include(CheckLanguage)
 check_language(CUDA)
-
 set(OpenCV_DIR "D:/opencv/build")
 # 设置为TensorRT的根目录
 
@@ -39,10 +38,10 @@ find_package(OpenCV)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
-file(GLOB CPPS
-  ${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cu
-  ${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cpp
-)
+# file(GLOB CPPS
+#   ${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cu
+#   ${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cpp
+# )
 
 message(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -65,10 +64,18 @@ target_link_libraries(${PROJECT_NAME}
         ${CUDA_LIBS}
         # ${CUDA_LIBRARIES}
         ${OpenCV_LIBS})
+
+file(GLOB CPPS
+${CMAKE_CURRENT_SOURCE_DIR}/models/*.cpp})
+
 add_executable(app_yolov10 main.cpp
-utils/yolo.cpp
+${CPPS}
+models/base_model.cpp
+models/det_model.cpp
+models/yolov10.cpp
+# utils/yolo.cpp
 utils/utils.cpp
-yolov10.cpp
+# yolov10.cpp
         ${TRT_DIR}/samples/common/logger.cpp
 )
 target_link_libraries(app_yolov10

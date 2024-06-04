@@ -1,5 +1,5 @@
+#include "models/yolov10.h"
 #include "utils/yolo.h"
-#include "yolov10.h"
 #include <opencv2/imgcodecs.hpp>
 
 void setParameters(utils::InitParameter &initParameters) {
@@ -166,7 +166,7 @@ int main(int argc, char **argv) {
     }
     // auto input = cv::imread(image_path);
     imgs_batch.emplace_back(frame);
-    task(yolo, param, imgs_batch, delay_time, batchi, false, false);
+    task(yolo, param, imgs_batch, delay_time, batchi, true, false);
   }
   // while (capture.isOpened()) {
   //   if (batchi >= total_batches && source != utils::InputStream::CAMERA) {

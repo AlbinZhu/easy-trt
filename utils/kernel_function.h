@@ -1,6 +1,7 @@
 #pragma once
 #include "common_include.h"
 #include "utils.h"
+#include <vector>
 
 #define CHECK(op) __check_cuda_runtime((op), #op, __FILE__, __LINE__)
 
@@ -33,7 +34,8 @@ void DEPLOY_DECL bgr2rgbDevice(const int &batch_size, float *src, int srcWidth,
 
 void DEPLOY_DECL normDevice(const int &batch_size, float *src, int srcWidth,
                             int srcHeight, float *dst, int dstWidth,
-                            int dstHeight, utils::InitParameter norm_param);
+                            int dstHeight, float scale,
+                            std::vector<float> means, std::vector<float> stds);
 
 void DEPLOY_DECL hwc2chwDevice(const int &batch_size, float *src, int srcWidth,
                                int srcHeight, float *dst, int dstWidth,

@@ -1,5 +1,6 @@
 #pragma once
 #include "common_include.h"
+#include <vector>
 
 #if defined(_WIN32)
 #define DEPLOY_DECL __declspec(dllexport)
@@ -184,8 +185,8 @@ struct InitParameter {
   int dst_h, dst_w;
 
   float scale{255.f};
-  float means[3] = {0.f, 0.f, 0.f};
-  float stds[3] = {1.f, 1.f, 1.f};
+  std::vector<float> means = {0.f, 0.f, 0.f};
+  std::vector<float> stds = {1.f, 1.f, 1.f};
 
   float iou_thresh;
   float conf_thresh;
@@ -193,6 +194,7 @@ struct InitParameter {
   int topK{300};
   std::string save_path;
 
+  int output_size;
   std::string winname = "TensorRT-Alpha";
   int char_width = 11;
   int det_info_render_width = 15;
