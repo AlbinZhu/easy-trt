@@ -15,13 +15,16 @@ public:
   InferEngine() { init(); }
   int run(std::vector<cv::Mat> imgs, DetResult *results);
 
+  int binThres;
+  int areaThres;
+
 private:
   int debug;
 
   std::string savePath;
   std::string modelPath;
   double confThres;
-  double iouThres;
+  // double iouThres;
 
   int maxResults;
 
@@ -39,4 +42,7 @@ extern "C" __declspec(dllexport) int infer(int width, int height, int channel,
                                            unsigned char *bytes[], int count,
                                            DetResult *results);
 
+extern "C" __declspec(dllexport) int compare(int width, int height, int channel,
+                                             unsigned char *bytes[], int x,
+                                             int y, int w, int h);
 int inferTest(std::vector<cv::Mat> imgs, DetResult *results);

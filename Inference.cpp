@@ -5,10 +5,13 @@
 #include <iostream>
 #include <memory>
 #include <minwindef.h>
+#include <opencv2/core.hpp>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 
 std::shared_ptr<InferEngine> inferEngine;
@@ -30,6 +33,10 @@ void InferEngine::loadConfig() {
   std::cout << "model path " << modelPath << std::endl;
   // iouThres = config.GetDoubleValue("config", "iou_thres");
   maxResults = config.GetLongValue("config", "max_results");
+
+  binThres = config.GetLongValue("config", "bin_thres");
+  areaThres = config.GetLongValue("config", "area_thres");
+
   std::cout << "max  " << maxResults << std::endl;
 }
 
@@ -74,7 +81,8 @@ int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
   model->preprocess(imgs);
   model->infer();
   model->postprocess(imgs);
-  // utils::show(model->getObjectss(), utils::dataSets::mg, 0, imgs);
+  utils::show(model->getObjectss(), utils::dataSets::mg, 0, imgs);
+  utils::save(model->getObjectss(), utils::dataSets::mg, savePath, imgs, 2, 1);
 
   // model->reset();
   std::cout << "size" << model->getObjectss()[0].size() << std::endl;
@@ -97,7 +105,7 @@ int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
       total += 1;
     }
   }
-  std::cout << "total " << total << std::endl;
+  // std::cout << "total " << total << std::endl;
   return total;
 }
 
@@ -115,6 +123,37 @@ int infer(int width, int height, int channel, unsigned char *bytes[], int count,
   }
   int res = inferEngine->run(imgs, results);
   return res;
+}
+
+int compare(int width, int height, int channel, unsigned char *bytes[], int x,
+            int y, int w, int h) {
+  cv::Mat img1(cv::Size(width, height), CV_8UC3, bytes[0]);
+  cv::Mat img2(cv::Size(width, height), CV_8UC3, bytes[1]);
+
+  auto sub1 = img1(cv::Rect(x, y, w, h));
+  auto sub2 = img2(cv::Rect(x, y, w, h));
+
+  cv::cvtColor(sub1, sub1, cv::COLOR_BGR2GRAY);
+  cv::cvtColor(sub2, sub2, cv::COLOR_BGR2GRAY);
+
+  cv::blur(sub1, sub1, cv::Size(3, 3));
+  cv::blur(sub2, sub2, cv::Size(3, 3));
+
+  cv::Mat resImg;
+  cv::absdiff(sub1, sub2, resImg);
+
+  cv::threshold(resImg, resImg, inferEngine->binThres, 255, cv::THRESH_BINARY);
+  // cv::imshow("res", resImg);
+
+  cv::imwrite("ttt.jpg", resImg);
+
+  int num = cv::countNonZero(resImg);
+  if (num > inferEngine->areaThres) {
+    return 1;
+  } else {
+    return 0;
+  }
+  // return 0;
 }
 
 // int inferTest(std::vector<cv::Mat> imgs, DetResult *results) {}
