@@ -9,6 +9,7 @@
 
 namespace utils {
 namespace dataSets {
+const std::vector<std::string> mg = {"port"};
 const std::vector<std::string> coco80 = {
     "person",        "bicycle",      "car",
     "motorcycle",    "airplane",     "bus",
@@ -70,6 +71,7 @@ const std::vector<std::string> voc20 = {
 const std::vector<std::string> face2 = {"non-face", "face"};
 } // namespace dataSets
 namespace Colors {
+const std::vector<cv::Scalar> colormg{cv::Scalar(0, 0, 255)};
 const std::vector<cv::Scalar> color80{
     cv::Scalar(128, 77, 207),  cv::Scalar(65, 32, 208),
     cv::Scalar(0, 224, 45),    cv::Scalar(3, 141, 219),

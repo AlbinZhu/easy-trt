@@ -168,6 +168,9 @@ void utils::show(const std::vector<std::vector<utils::Box>> &objectss,
         {
           color = Colors::color20[box.label];
         }
+        if (classNames.size() == 1) {
+          color = Colors::colormg[box.label];
+        }
         cv::rectangle(imgsBatch[bi], cv::Point(box.left, box.top),
                       cv::Point(box.right, box.bottom), color, 2, cv::LINE_AA);
         cv::String det_info =

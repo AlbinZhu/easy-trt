@@ -8,6 +8,9 @@ project(easy-trt VERSION 0.1.0 LANGUAGES C CXX CUDA)
 include(CheckLanguage)
 check_language(CUDA)
 
+
+include_directories("./include")
+
 set(OpenCV_DIR "D:/opencv/build")
 # 设置为TensorRT的根目录
 
@@ -21,6 +24,8 @@ list(APPEND CUDA_LIBS
   ${CUDA_nppc_LIBRARY} ${CUDA_nppig_LIBRARY} ${CUDA_nppidei_LIBRARY} ${CUDA_nppial_LIBRARY})
 
 # find_package(CUDA REQUIRED)
+
+
 
 # TensorRT
 # 标志文件
@@ -71,6 +76,37 @@ utils/utils.cpp
 yolov10.cpp
         ${TRT_DIR}/samples/common/logger.cpp
 )
+
+add_library(mgsx SHARED
+  utils/kernel_function.cu
+  utils/yolo.cpp
+  utils/utils.cpp
+  decode_yolov10.cu
+  yolov10.cpp
+  Inference.cpp
+  ${TRT_DIR}/samples/common/logger.cpp
+
+)
+
+add_executable(mgtest mgtest.cpp)
+target_link_libraries(mgtest
+ nvinfer
+ nvonnxparser
+ ${CUDA_LIBS}
+ CUDA::cudart
+ ${OpenCV_LIBS}
+ mgsx
+)
+
+target_link_libraries(mgsx
+        nvinfer
+        nvonnxparser
+        ${CUDA_LIBS}
+        # ${CUDA_LIBRARIES}CUDA::cudart
+        #
+        CUDA::cudart
+        ${OpenCV_LIBS})
+
 target_link_libraries(app_yolov10
         D:/project/easy-trt/build/easy-trt.lib
         nvinfer

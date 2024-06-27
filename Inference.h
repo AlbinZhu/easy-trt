@@ -1,0 +1,42 @@
+#include "yolov10.h"
+#include <memory>
+#include <opencv2/core/mat.hpp>
+#include <string>
+#include <vector>
+typedef struct {
+  int idx;
+  int cls;
+  float score;
+  int box[4] = {0, 0, 0, 0};
+} DetResult;
+
+class InferEngine {
+public:
+  InferEngine() { init(); }
+  int run(std::vector<cv::Mat> imgs, DetResult *results);
+
+private:
+  int debug;
+
+  std::string savePath;
+  std::string modelPath;
+  double confThres;
+  double iouThres;
+
+  int maxResults;
+
+  int w;
+  int h;
+
+  std::unique_ptr<YOLOV10> model;
+
+  void init();
+  void loadConfig();
+};
+
+extern "C" __declspec(dllexport) void init();
+extern "C" __declspec(dllexport) int infer(int width, int height, int channel,
+                                           unsigned char *bytes[], int count,
+                                           DetResult *results);
+
+int inferTest(std::vector<cv::Mat> imgs, DetResult *results);

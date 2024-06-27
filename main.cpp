@@ -3,16 +3,16 @@
 #include <opencv2/imgcodecs.hpp>
 
 void setParameters(utils::InitParameter &initParameters) {
-  initParameters.class_names = utils::dataSets::coco80;
+  initParameters.class_names = utils::dataSets::mg;
   // initParameters.class_names = utils::dataSets::voc20;
-  initParameters.num_class = 80; // for coco
+  initParameters.num_class = 1; // for coco
   // initParameters.num_class = 20; // for voc2012
-  initParameters.batch_size = 8;
+  initParameters.batch_size = 1;
   initParameters.dst_h = 640;
   initParameters.dst_w = 640;
   initParameters.input_output_names = {"images", "output0"};
-  initParameters.conf_thresh = 0.25f;
-  initParameters.iou_thresh = 0.45f;
+  initParameters.conf_thresh = 0.6f;
+  initParameters.iou_thresh = 0.6f;
   initParameters.save_path = "";
 }
 
@@ -64,9 +64,9 @@ int main(int argc, char **argv) {
   utils::InitParameter param;
   setParameters(param);
   // path
-  std::string model_path = "D:/TensorRT-8.6.1.6/bin/yolov10x.engine";
+  std::string model_path = "D:/TensorRT-8.6.1.6/bin/mgsx.engine";
   std::string video_path = "../../data/people.mp4";
-  std::string image_path = "D:/project/ultralytics/ultralytics/assets/bus.jpg";
+  std::string image_path = "E:/mgsx/val/2.jpg";
   // camera' id
   // int camera_id = 0;
 
@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
   // update params from command line parser
   int size = -1; // w or h
   int batch_size = 8;
-  bool is_show = false;
+  bool is_show = true;
   bool is_save = false;
   // if (parser.has("model")) {
   //   model_path = parser.get<std::string>("model");
@@ -118,13 +118,13 @@ int main(int argc, char **argv) {
   //   is_show = true;
   //   sample::gLogInfo << "is_show = " << is_show << std::endl;
   // }
-  is_show = true;
+  is_show = false;
   // if (parser.has("savePath")) {
   //   is_save = true;
   //   param.save_path = parser.get<std::string>("savePath");
   //   sample::gLogInfo << "save_path = " << param.save_path << std::endl;
   // }
-  is_save = true;
+  is_save = false;
   int total_batches = 0;
   int delay_time = 0;
   // cv::VideoCapture capture;
@@ -135,8 +135,9 @@ int main(int argc, char **argv) {
   // }
 
   param.save_path = "./";
-  param.src_h = 1080;
-  param.src_w = 810;
+  param.src_h = 1440;
+  param.src_w = 2560;
+
   YOLOV10 yolo(param);
 
   // read model
@@ -159,14 +160,15 @@ int main(int argc, char **argv) {
     imgs_batch.reserve(param.batch_size);
     sample::gLogInfo << imgs_batch.capacity() << std::endl;
     int batchi = 0;
-    if (i % 2 == 0) {
-      frame = cv::imread("0.jpg");
-    } else {
-      frame = cv::imread("1.jpg");
-    }
+    frame = cv::imread(image_path);
+    // if (i % 2 == 0) {
+    //   frame = cv::imread("0.jpg");
+    // } else {
+    //   frame = cv::imread("1.jpg");
+    // }
     // auto input = cv::imread(image_path);
     imgs_batch.emplace_back(frame);
-    task(yolo, param, imgs_batch, delay_time, batchi, false, false);
+    task(yolo, param, imgs_batch, delay_time, batchi, is_show, is_save);
   }
   // while (capture.isOpened()) {
   //   if (batchi >= total_batches && source != utils::InputStream::CAMERA) {
