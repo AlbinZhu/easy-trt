@@ -57,24 +57,24 @@ void InferEngine::init() {
   param.dst_h = 640;
   param.dst_w = 640;
   param.batch_size = 1;
-  param.iou_thresh = 0.6;
+  param.iou_thresh = confThres;
   param.conf_thresh = 0.6;
   param.is_show = false;
   param.is_save = false;
 
   // model = YOLOV10(param);
-  // model = std::make_shared<YOLOV10>(param);
-  // std::vector<unsigned char> trt_file = utils::loadModel(modelPath);
-  // if (trt_file.empty()) {
-  //   sample::gLogError << "trt_file is empty!" << std::endl;
-  //   // return -1;
-  // }
-  // if (!model->init(trt_file)) {
-  //   sample::gLogError << "initEngine() ocur errors!" << std::endl;
-  //   // return -1;
-  // }
-  // model->check();
-  // param.conf_thresh = bsThres;
+  model = std::make_shared<YOLOV10>(param);
+  std::vector<unsigned char> trt_file = utils::loadModel(modelPath);
+  if (trt_file.empty()) {
+    sample::gLogError << "trt_file is empty!" << std::endl;
+    // return -1;
+  }
+  if (!model->init(trt_file)) {
+    sample::gLogError << "initEngine() ocur errors!" << std::endl;
+    // return -1;
+  }
+  model->check();
+  param.conf_thresh = bsThres;
   bsModel = std::make_unique<YOLOV10>(param);
   std::vector<unsigned char> bs_trt_file = utils::loadModel(bsModelPath);
   if (bs_trt_file.empty()) {
@@ -99,66 +99,95 @@ int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
   std::cout << "infer1" << std::endl;
   // std::cout << "model " << &bsModel << std::endl;
   // std::cout << "model2 " << &model << std::endl;
-  bsModel->copy(imgs);
-  bsModel->preprocess(imgs);
-  bsModel->infer();
-  bsModel->postprocess(imgs);
-  // std::cout << "infer1 com" << std::endl;
+  std::thread bs([this, imgs] {
+    bsModel->copy(imgs);
+    bsModel->preprocess(imgs);
+    bsModel->infer();
+    bsModel->postprocess(imgs);
+  });
+
+  // std::thread port([this, imgs] {
+  //   model->copy(imgs);
+  //   model->preprocess(imgs);
+  //   model->infer();
+  //   model->postprocess(imgs);
   // });
-  // model->copy(imgs);
-  // model->preprocess(imgs);
-  // model->infer();
-  // model->postprocess(imgs);
+  // port.join();
+  model->copy(imgs);
+  model->preprocess(imgs);
+  model->infer();
+  model->postprocess(imgs);
   // utils::show(model->getObjectss(), utils::dataSets::mg, 0, imgs);
   // utils::save(model->getObjectss(), utils::dataSets::mg, savePath, imgs, 2,
   // 1);
 
-  // std::cout << "size" << model->getObjectss()[0].size() << std::endl;
+  // int portSize = model->getObjectss()[0].size();
+  // int bsSize = bsModel->getObjectss()[0].size();
+  // bs.join();
+  //
+  // std::thread bsPost([this, results, portSize, bsSize] {
+  //   for (int i = 0; i < bsSize; i++) {
+  //     auto box = bsModel->getObjectss()[0][i];
+  //       if (total >= maxResults) {
+  //         break;
+  //       }
+  //       auto box = boxes[j];
+  //       results[total].idx = i;
+  //       results[total].cls = 1;
+  //       results[total].score = box.confidence;
+  //       results[total].box[0] = box.left;
+  //       results[total].box[1] = box.top;
+  //       results[total].box[2] = box.right;
+  //       results[total].box[3] = box.bottom;
+  //
+  //       total += 1;
+  //     }
+  //   }
+  // })
   // int resNum = min(maxResults, boxes.size())
   int total = 0;
-  // for (int i = 0; i < model->getObjectss().size(); i++) {
-  //   auto boxes = model->getObjectss()[i];
-  //   for (int j = 0; j < boxes.size(); j++) {
-  //     if (total >= maxResults) {
-  //       break;
-  //     }
-  //     auto box = boxes[j];
-  //     results[total].idx = i;
-  //     results[total].cls = 0;
-  //     results[total].score = box.confidence;
-  //     results[total].box[0] = box.left;
-  //     results[total].box[1] = box.top;
-  //     results[total].box[2] = box.right;
-  //     results[total].box[3] = box.bottom;
-  //
-  //     total += 1;
-  //   }
-  // }
-  // model->reset();
-  // bs.join();
+  for (int i = 0; i < model->getObjectss().size(); i++) {
+    auto boxes = model->getObjectss()[i];
+    for (int j = 0; j < boxes.size(); j++) {
+      if (total >= maxResults) {
+        break;
+      }
+      auto box = boxes[j];
+      results[total].idx = i;
+      results[total].cls = 0;
+      results[total].score = box.confidence;
+      results[total].box[0] = box.left;
+      results[total].box[1] = box.top;
+      results[total].box[2] = box.right;
+      results[total].box[3] = box.bottom;
+
+      total += 1;
+    }
+  }
+  bs.join();
   // utils::show(bsModel->getObjectss(), utils::dataSets::mg, 0, imgs);
   // utils::save(bsModel->getObjectss(), utils::dataSets::mg, "000.jpg", imgs,
   // 1, 0);
-  // for (int i = 0; i < bsModel->getObjectss().size(); i++) {
-  //   auto boxes = bsModel->getObjectss()[i];
-  //   for (int j = 0; j < boxes.size(); j++) {
-  //     if (total >= maxResults) {
-  //       break;
-  //     }
-  //     auto box = boxes[j];
-  //     results[total].idx = i;
-  //     results[total].cls = 1;
-  //     results[total].score = box.confidence;
-  //     results[total].box[0] = box.left;
-  //     results[total].box[1] = box.top;
-  //     results[total].box[2] = box.right;
-  //     results[total].box[3] = box.bottom;
-  //
-  //     total += 1;
-  //   }
-  // }
-  bsModel.reset();
-  std::cout << "total " << total << std::endl;
+  for (int i = 0; i < bsModel->getObjectss().size(); i++) {
+    auto boxes = bsModel->getObjectss()[i];
+    for (int j = 0; j < boxes.size(); j++) {
+      if (total >= maxResults) {
+        break;
+      }
+      auto box = boxes[j];
+      results[total].idx = i;
+      results[total].cls = 1;
+      results[total].score = box.confidence;
+      results[total].box[0] = box.left;
+      results[total].box[1] = box.top;
+      results[total].box[2] = box.right;
+      results[total].box[3] = box.bottom;
+
+      total += 1;
+    }
+  }
+  model->resetModel();
+  bsModel->resetModel();
   return total;
 }
 

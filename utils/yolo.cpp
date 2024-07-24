@@ -260,6 +260,7 @@ std::vector<std::vector<utils::Box>> yolo::YOLO::getObjectss() const {
 }
 
 void yolo::YOLO::reset() {
+void yolo::YOLO::resetModel() {
   CHECK(
       cudaMemset(m_output_objects_device, 0,
                  sizeof(float) * m_param.batch_size * (1 + 7 * m_param.topK)));

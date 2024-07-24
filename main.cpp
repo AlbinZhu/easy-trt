@@ -46,7 +46,7 @@ void task(YOLOV10 &yolo, const utils::InitParameter &param,
   if (isSave)
     utils::save(yolo.getObjectss(), param.class_names, param.save_path,
                 imgsBatch, param.batch_size, batchi);
-  yolo.reset();
+  yolo.resetModel();
 }
 
 int main(int argc, char **argv) {

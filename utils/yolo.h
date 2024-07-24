@@ -16,7 +16,7 @@ public:
   virtual void preprocess(const std::vector<cv::Mat> &imgsBatch);
   virtual bool infer();
   virtual void postprocess(const std::vector<cv::Mat> &imgsBatch);
-  virtual void reset();
+  virtual void resetModel();
 
 public:
   std::vector<std::vector<utils::Box>> getObjectss() const;

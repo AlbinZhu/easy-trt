@@ -1,4 +1,5 @@
 #include "Inference.h"
+#include <ctime>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
@@ -37,16 +38,35 @@ int main(int argc, char *argv[]) {
   // cv::waitKey(0);
 
   // int resn = compare(2560, 1440, 3, bytes2, 968, 661, 1051 - 968, 798 - 661);
+  int size = img.total() * img.elemSize();
+  typedef unsigned char byte;
+  byte *bytes = new byte[size];
+  std::memcpy(bytes, img.data, size * sizeof(byte));
+  byte *ba[] = {bytes};
+
+  clock_t ts = clock();
   for (int i = 0; i < 100; i++) {
-    int size = img.total() * img.elemSize();
-    typedef unsigned char byte;
-    byte *bytes = new byte[size];
-    std::memcpy(bytes, img.data, size * sizeof(byte));
-    byte *ba[] = {bytes};
-    DetResult *detresults = new DetResult[3];
+
+    clock_t start = clock();
+    DetResult *detresults = new DetResult[10];
     auto num = infer(1920, 1080, 3, ba, 1, detresults);
-    std::cout << "res num " << num << std::endl;
+    clock_t end = clock();
+    std::cout << "duration: " << end - start << std::endl;
+    // for (int i = 0; i < num; i++) {
+    //   auto res = detresults[i];
+    //   std::cout << "cls: " << res.cls << std::endl;
+    //   std::cout << "score: " << res.score << std::endl;
+    //   std::cout << "idx: " << res.idx << std::endl;
+    //   std::cout << "x1: " << res.box[0] << std::endl;
+    //   std::cout << "y1: " << res.box[1] << std::endl;
+    //   std::cout << "x2: " << res.box[2] << std::endl;
+    //   std::cout << "y2: " << res.box[3] << std::endl;
+    // }
+    //
+    // std::cout << "res num " << num << std::endl;
   }
+  clock_t te = clock();
+  std::cout << "total duration: " << te - ts << std::endl;
   // int resn = compare(2560, 1440, 3, ba, 968, 661, 1051 - 968, 798 - 661);
 
   // std::cout << "res  " << resn << std::endl;
