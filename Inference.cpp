@@ -1,5 +1,6 @@
 #include "Inference.h"
 #include "SimpleIni.h"
+#include "logger.h"
 #include "utils/utils.h"
 #include "yolov10.h"
 #include <iostream>
@@ -12,6 +13,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/opencv.hpp>
+#include <thread>
 #include <vector>
 
 std::shared_ptr<InferEngine> inferEngine;
@@ -29,7 +31,9 @@ void InferEngine::loadConfig() {
   debug = config.GetLongValue("config", "debug");
 
   modelPath = config.GetValue("config", "model_path");
+  bsModelPath = config.GetValue("config", "bs_model_path");
   confThres = config.GetDoubleValue("config", "conf_thres");
+  bsThres = config.GetDoubleValue("config", "bs_conf_thres");
   std::cout << "model path " << modelPath << std::endl;
   // iouThres = config.GetDoubleValue("config", "iou_thres");
   maxResults = config.GetLongValue("config", "max_results");
@@ -37,75 +41,124 @@ void InferEngine::loadConfig() {
   binThres = config.GetLongValue("config", "bin_thres");
   areaThres = config.GetLongValue("config", "area_thres");
 
+  w = config.GetLongValue("config", "w");
+  h = config.GetLongValue("config", "h");
   std::cout << "max  " << maxResults << std::endl;
 }
 
 void InferEngine::init() {
-
   loadConfig();
-
   utils::InitParameter param;
   param.num_class = 1;
   param.class_names = utils::dataSets::mg;
   param.input_output_names = {"images", "output0"};
-  param.src_h = 1440;
-  param.src_w = 2560;
+  param.src_h = h;
+  param.src_w = w;
   param.dst_h = 640;
   param.dst_w = 640;
-  param.batch_size = 2;
+  param.batch_size = 1;
   param.iou_thresh = 0.6;
   param.conf_thresh = 0.6;
   param.is_show = false;
   param.is_save = false;
 
   // model = YOLOV10(param);
-  model = std::make_unique<YOLOV10>(param);
+  // model = std::make_shared<YOLOV10>(param);
+  // std::vector<unsigned char> trt_file = utils::loadModel(modelPath);
+  // if (trt_file.empty()) {
+  //   sample::gLogError << "trt_file is empty!" << std::endl;
+  //   // return -1;
+  // }
+  // if (!model->init(trt_file)) {
+  //   sample::gLogError << "initEngine() ocur errors!" << std::endl;
+  //   // return -1;
+  // }
+  // model->check();
+  // param.conf_thresh = bsThres;
+  bsModel = std::make_unique<YOLOV10>(param);
+  std::vector<unsigned char> bs_trt_file = utils::loadModel(bsModelPath);
+  if (bs_trt_file.empty()) {
+    sample::gLogError << "bs trt_file is empyt!" << std::endl;
+  }
 
-  // read model
-  std::vector<unsigned char> trt_file = utils::loadModel(modelPath);
-  if (trt_file.empty()) {
-    sample::gLogError << "trt_file is empty!" << std::endl;
-    // return -1;
+  if (!bsModel->init(bs_trt_file)) {
+    sample::gLogError << "bs initEngine() ocur errors!" << std::endl;
   }
-  // init model
-  if (!model->init(trt_file)) {
-    sample::gLogError << "initEngine() ocur errors!" << std::endl;
-    // return -1;
-  }
-  model->check();
+  bsModel->check();
 }
 
 int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
   // utils::DeviceTimer d_t0;
-  model->copy(imgs);
-  model->preprocess(imgs);
-  model->infer();
-  model->postprocess(imgs);
-  utils::show(model->getObjectss(), utils::dataSets::mg, 0, imgs);
-  utils::save(model->getObjectss(), utils::dataSets::mg, savePath, imgs, 2, 1);
 
-  // model->reset();
-  std::cout << "size" << model->getObjectss()[0].size() << std::endl;
+  // std::thread bs([this, imgs] {
+
+  // for (auto img : imgs) {
+  //   cv::imshow("img2", img);
+  //   cv::waitKey(0);
+  // }
+  std::cout << "infer1" << std::endl;
+  // std::cout << "model " << &bsModel << std::endl;
+  // std::cout << "model2 " << &model << std::endl;
+  bsModel->copy(imgs);
+  bsModel->preprocess(imgs);
+  bsModel->infer();
+  bsModel->postprocess(imgs);
+  // std::cout << "infer1 com" << std::endl;
+  // });
+  // model->copy(imgs);
+  // model->preprocess(imgs);
+  // model->infer();
+  // model->postprocess(imgs);
+  // utils::show(model->getObjectss(), utils::dataSets::mg, 0, imgs);
+  // utils::save(model->getObjectss(), utils::dataSets::mg, savePath, imgs, 2,
+  // 1);
+
+  // std::cout << "size" << model->getObjectss()[0].size() << std::endl;
   // int resNum = min(maxResults, boxes.size())
   int total = 0;
-  for (int i = 0; i < model->getObjectss().size(); i++) {
-    auto boxes = model->getObjectss()[i];
-    for (int j = 0; j < boxes.size(); j++) {
-      if (total >= maxResults) {
-        break;
-      }
-      auto box = boxes[j];
-      results[total].idx = i;
-      results[total].score = box.confidence;
-      results[total].box[0] = box.left;
-      results[total].box[1] = box.top;
-      results[total].box[2] = box.right;
-      results[total].box[3] = box.bottom;
-
-      total += 1;
-    }
-  }
-  // std::cout << "total " << total << std::endl;
+  // for (int i = 0; i < model->getObjectss().size(); i++) {
+  //   auto boxes = model->getObjectss()[i];
+  //   for (int j = 0; j < boxes.size(); j++) {
+  //     if (total >= maxResults) {
+  //       break;
+  //     }
+  //     auto box = boxes[j];
+  //     results[total].idx = i;
+  //     results[total].cls = 0;
+  //     results[total].score = box.confidence;
+  //     results[total].box[0] = box.left;
+  //     results[total].box[1] = box.top;
+  //     results[total].box[2] = box.right;
+  //     results[total].box[3] = box.bottom;
+  //
+  //     total += 1;
+  //   }
+  // }
+  // model->reset();
+  // bs.join();
+  // utils::show(bsModel->getObjectss(), utils::dataSets::mg, 0, imgs);
+  // utils::save(bsModel->getObjectss(), utils::dataSets::mg, "000.jpg", imgs,
+  // 1, 0);
+  // for (int i = 0; i < bsModel->getObjectss().size(); i++) {
+  //   auto boxes = bsModel->getObjectss()[i];
+  //   for (int j = 0; j < boxes.size(); j++) {
+  //     if (total >= maxResults) {
+  //       break;
+  //     }
+  //     auto box = boxes[j];
+  //     results[total].idx = i;
+  //     results[total].cls = 1;
+  //     results[total].score = box.confidence;
+  //     results[total].box[0] = box.left;
+  //     results[total].box[1] = box.top;
+  //     results[total].box[2] = box.right;
+  //     results[total].box[3] = box.bottom;
+  //
+  //     total += 1;
+  //   }
+  // }
+  bsModel.reset();
+  std::cout << "total " << total << std::endl;
   return total;
 }
 
@@ -145,7 +198,7 @@ int compare(int width, int height, int channel, unsigned char *bytes[], int x,
   cv::threshold(resImg, resImg, inferEngine->binThres, 255, cv::THRESH_BINARY);
   // cv::imshow("res", resImg);
 
-  cv::imwrite("ttt.jpg", resImg);
+  // cv::imwrite("ttt.jpg", resImg);
 
   int num = cv::countNonZero(resImg);
   if (num > inferEngine->areaThres) {

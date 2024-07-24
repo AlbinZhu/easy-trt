@@ -23,7 +23,10 @@ private:
 
   std::string savePath;
   std::string modelPath;
+  std::string bsModelPath;
+
   double confThres;
+  double bsThres;
   // double iouThres;
 
   int maxResults;
@@ -31,7 +34,8 @@ private:
   int w;
   int h;
 
-  std::unique_ptr<YOLOV10> model;
+  std::shared_ptr<YOLOV10> model;
+  std::shared_ptr<YOLOV10> bsModel;
 
   void init();
   void loadConfig();

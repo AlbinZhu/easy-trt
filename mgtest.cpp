@@ -7,9 +7,9 @@
 
 int main(int argc, char *argv[]) {
 
-  auto img = cv::imread("E:/mgsx/val/96.jpg");
+  auto img = cv::imread("E:/202/biansi/val/1-151.jpg");
 
-  auto img2 = cv::imread("E:/mgsx/val/97.jpg");
+  auto img2 = cv::imread("E:/202/biansi/val/1-151.jpg");
 
   // unsigned char *bytes[] = {img.data, img2.data};
 
@@ -25,23 +25,29 @@ int main(int argc, char *argv[]) {
   // cv::imshow("img2", sub2);
   // cv::waitKey(0);
   init();
+
   // unsigned char *bytes2[] = {sub1.data, sub2.data};
-  int size = img.total() * img.elemSize();
-  typedef unsigned char byte;
-  byte *bytes = new byte[size];
-  std::memcpy(bytes, img.data, size * sizeof(byte));
   // cv::Mat test(cv::Size(2560, 1440), CV_8UC3, bytes);
-  cv::Mat timg = cv::Mat(cv::Size(2560, 1440), CV_8UC3, bytes);
+  // cv::Mat timg = cv::Mat(cv::Size(2560, 1440), CV_8UC3, bytes);
 
-  byte *bytes2 = new byte[size];
-  std::memcpy(bytes2, img2.data, size * sizeof(byte));
+  // byte *bytes2 = new byte[size];
+  // std::memcpy(bytes2, img2.data, size * sizeof(byte));
 
-  cv::imshow("test", timg);
-  cv::waitKey(0);
+  // cv::imshow("test", timg);
+  // cv::waitKey(0);
 
-  byte *ba[] = {bytes, bytes2};
   // int resn = compare(2560, 1440, 3, bytes2, 968, 661, 1051 - 968, 798 - 661);
-  int resn = compare(2560, 1440, 3, ba, 968, 661, 1051 - 968, 798 - 661);
+  for (int i = 0; i < 100; i++) {
+    int size = img.total() * img.elemSize();
+    typedef unsigned char byte;
+    byte *bytes = new byte[size];
+    std::memcpy(bytes, img.data, size * sizeof(byte));
+    byte *ba[] = {bytes};
+    DetResult *detresults = new DetResult[3];
+    auto num = infer(1920, 1080, 3, ba, 1, detresults);
+    std::cout << "res num " << num << std::endl;
+  }
+  // int resn = compare(2560, 1440, 3, ba, 968, 661, 1051 - 968, 798 - 661);
 
-  std::cout << "res  " << resn << std::endl;
+  // std::cout << "res  " << resn << std::endl;
 }
