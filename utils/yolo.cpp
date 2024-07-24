@@ -1,4 +1,5 @@
 #include "yolo.h"
+#include <iostream>
 
 yolo::YOLO::YOLO(const utils::InitParameter &param) : m_param(param) {
   // input
@@ -259,7 +260,6 @@ std::vector<std::vector<utils::Box>> yolo::YOLO::getObjectss() const {
   return this->m_objectss;
 }
 
-void yolo::YOLO::reset() {
 void yolo::YOLO::resetModel() {
   CHECK(
       cudaMemset(m_output_objects_device, 0,

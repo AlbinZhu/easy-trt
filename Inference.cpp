@@ -90,15 +90,6 @@ void InferEngine::init() {
 int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
   // utils::DeviceTimer d_t0;
 
-  // std::thread bs([this, imgs] {
-
-  // for (auto img : imgs) {
-  //   cv::imshow("img2", img);
-  //   cv::waitKey(0);
-  // }
-  std::cout << "infer1" << std::endl;
-  // std::cout << "model " << &bsModel << std::endl;
-  // std::cout << "model2 " << &model << std::endl;
   std::thread bs([this, imgs] {
     bsModel->copy(imgs);
     bsModel->preprocess(imgs);
@@ -106,13 +97,6 @@ int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
     bsModel->postprocess(imgs);
   });
 
-  // std::thread port([this, imgs] {
-  //   model->copy(imgs);
-  //   model->preprocess(imgs);
-  //   model->infer();
-  //   model->postprocess(imgs);
-  // });
-  // port.join();
   model->copy(imgs);
   model->preprocess(imgs);
   model->infer();
@@ -121,30 +105,6 @@ int InferEngine::run(std::vector<cv::Mat> imgs, DetResult *results) {
   // utils::save(model->getObjectss(), utils::dataSets::mg, savePath, imgs, 2,
   // 1);
 
-  // int portSize = model->getObjectss()[0].size();
-  // int bsSize = bsModel->getObjectss()[0].size();
-  // bs.join();
-  //
-  // std::thread bsPost([this, results, portSize, bsSize] {
-  //   for (int i = 0; i < bsSize; i++) {
-  //     auto box = bsModel->getObjectss()[0][i];
-  //       if (total >= maxResults) {
-  //         break;
-  //       }
-  //       auto box = boxes[j];
-  //       results[total].idx = i;
-  //       results[total].cls = 1;
-  //       results[total].score = box.confidence;
-  //       results[total].box[0] = box.left;
-  //       results[total].box[1] = box.top;
-  //       results[total].box[2] = box.right;
-  //       results[total].box[3] = box.bottom;
-  //
-  //       total += 1;
-  //     }
-  //   }
-  // })
-  // int resNum = min(maxResults, boxes.size())
   int total = 0;
   for (int i = 0; i < model->getObjectss().size(); i++) {
     auto boxes = model->getObjectss()[i];
@@ -225,9 +185,6 @@ int compare(int width, int height, int channel, unsigned char *bytes[], int x,
   cv::absdiff(sub1, sub2, resImg);
 
   cv::threshold(resImg, resImg, inferEngine->binThres, 255, cv::THRESH_BINARY);
-  // cv::imshow("res", resImg);
-
-  // cv::imwrite("ttt.jpg", resImg);
 
   int num = cv::countNonZero(resImg);
   if (num > inferEngine->areaThres) {
