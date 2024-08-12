@@ -67,6 +67,15 @@ void YOLOV10::preprocess(const std::vector<cv::Mat> &imgsBatch) {
   resizeDevice(m_param.batch_size, m_input_src_device, m_param.src_w,
                m_param.src_h, m_input_resize_device, m_param.dst_w,
                m_param.dst_h, 114, m_dst2src);
+
+  // float *resize_data = new float[3 * 640 * 640];
+  // cudaMemcpy(resize_data, m_input_resize_device, sizeof(float) * 3 * 640 *
+  // 640,
+  //            cudaMemcpyDeviceToHost);
+  //
+  // cv::Mat resizeImg(cv::Size(640, 640), CV_8UC3, resize_data);
+  // cv::imshow("resize", resizeImg);
+  // cv::waitKey(0);
   bgr2rgbDevice(m_param.batch_size, m_input_resize_device, m_param.dst_w,
                 m_param.dst_h, m_input_rgb_device, m_param.dst_w,
                 m_param.dst_h);
