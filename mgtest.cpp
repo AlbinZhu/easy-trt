@@ -1,5 +1,6 @@
 #include "Inference.h"
 #include <ctime>
+#include <filesystem>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
@@ -8,9 +9,15 @@
 
 int main(int argc, char *argv[]) {
 
-  auto img = cv::imread("E:/202/biansi/val/1-151.jpg");
+  // using namespace filesytem;
+  // std::experimental::filesystem::directory_iterator;
+  // auto iter = std::filesystem::directory_iterator();
+  // for (auto &v : std::filesystem::dire) {
+  // }
 
-  auto img2 = cv::imread("E:/202/biansi/val/1-151.jpg");
+  auto img = cv::imread("E:/mgsx/812/frame/0812_00165.jpg");
+
+  auto img2 = cv::imread("E:/mgsx/812/frame/0812_00166.jpg");
 
   // unsigned char *bytes[] = {img.data, img2.data};
 
@@ -22,27 +29,32 @@ int main(int argc, char *argv[]) {
   // auto sub2 = img2(cv::Rect(968, 661, 1051 - 968, 798 - 661));
   // cv::imwrite("sub1.jpg", sub1);
   // cv::imwrite("sub2.jpg", sub2);
-  // cv::imshow("img1", sub1);
-  // cv::imshow("img2", sub2);
-  // cv::waitKey(0);
+  cv::imshow("img1", img);
+  cv::waitKey(0);
+  cv::imshow("img2", img2);
+  cv::waitKey(0);
   init();
+  int size = img.total() * img.elemSize();
+  typedef unsigned char byte;
+  byte *bytes1 = new byte[size];
+  byte *bytes2 = new byte[size];
 
   // unsigned char *bytes2[] = {sub1.data, sub2.data};
   // cv::Mat test(cv::Size(2560, 1440), CV_8UC3, bytes);
   // cv::Mat timg = cv::Mat(cv::Size(2560, 1440), CV_8UC3, bytes);
 
   // byte *bytes2 = new byte[size];
-  // std::memcpy(bytes2, img2.data, size * sizeof(byte));
+  std::memcpy(bytes1, img.data, size * sizeof(byte));
+  std::memcpy(bytes2, img2.data, size * sizeof(byte));
+  byte *ba[] = {bytes1, bytes2};
 
   // cv::imshow("test", timg);
   // cv::waitKey(0);
 
-  // int resn = compare(2560, 1440, 3, bytes2, 968, 661, 1051 - 968, 798 - 661);
-  int size = img.total() * img.elemSize();
-  typedef unsigned char byte;
-  byte *bytes = new byte[size];
-  std::memcpy(bytes, img.data, size * sizeof(byte));
-  byte *ba[] = {bytes};
+  int resn = compare(1920, 1080, 3, ba, 1060, 512, 63, 104);
+  std::cout << resn << std::endl;
+  return 0;
+  // std::memcpy(bytes, img.data, size * sizeof(byte));
 
   clock_t ts = clock();
   for (int i = 0; i < 100; i++) {
