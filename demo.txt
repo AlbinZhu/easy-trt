@@ -1,0 +1,414 @@
+SSTS XXXX 871.07-2015(V3)
+3.1.3.2 其他环境条件 3.1.3.2 Other Environmental Conditions
+子系统中所涉及到的零部件应满足SMTC 3 The system shall meet the peFRormance
+800 001中的其它环境的要求。 requirements specified in SMTC 3 800 001
+when exposed to the reference environmental
+在持续车速300 km/h，胎压传感器能持续工 conditions.
+作30 min，无任何损坏。
+The TPS shall be able to operate and
+withstand, without damage, a continuous
+vehicle speed of 300 km/h for 30 minutes.
+3.1.3.3 电子电气环境条件 3.1.3.3 Electrical/Electronic Environmental
+Conditions
+本子系统中所涉及到的零部件应满足SMTC The system shall comply with the electro-
+3 800 006的要求。 magnetic compatibility objectives as stated in
+SMTC 3 800 006.
+本子系统中所涉及到的零部件应满足SMTC
+The system shall comply with some
+3 800 001中对电器部分的要求。
+requirements defined in the SMTC 3 800 001.
+3.1.4 界面 3.1.4 InteFRaces
+3.1.4.1 子系统和车辆外部 3.1.4.1 External-to-Vehicle to Subsystem
+The vehicle Shall provide two-way
+整车至少能通过装配线诊断链或者下线设备
+communication to the TPMS ECU through the
+与胎压监测系统进行通信。 Assembly Line Diagnostic Link with various off-
+board test devices.
+当手工学习传感器 ID 时，车辆应提供视觉与
+The vehicle Shall provide audible and visible
+听觉反馈信息
+feedback while manually learning sensor ID’s.
+3.1.4.2 子系统和子系统 3.1.4.2 Subsystem to Subsystem
+本子系统内部和本子系统与其它子系统之间 The signal inteFRace with other subsystem as
+的信号接口如下表： follow:
+表30 TPMS子系统涉及硬线信号
+Table30 TPMS subsystem hardwire signal
+信号名 信号类型 相关特征 工作电流
+序号 范围/Operate
+/Signal /Signal 描述/Description ID/Related /Normal
+/No. Range
+Name type Feature ID current
+1 KL.30 SRC Battery position (9~ 16) V
+2 KL.31 GND Battery negative GND
+3 HSCAN-H CAN_H CAN high N/A
+4 HSCAN-L CAN_L CAN low N/A
+System Related Network Signal Definition: as
+系统涉及串行数据定义：见附件
+attachment
+TPMS Network
+Signal List - v1.1.xlsx
+33
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR ConfidentialSSTS XXXX 871.07-2015(V3)
+3.2 产品特性 3.2 Product Characteristics
+3.2.1 性能 3.2.1 Performance
+a) 胎压监测系统性能必须满足 SMTC 3 851 a) The performance of TPMS system shall
+002要求 conform to SMTC 3 851 002.
+b) General requirement shall conform to
+b) 一般性能要求，应符合 SMTC 3 800 001
+SMTC 3 800 001. In general, the
+所规定的要求。本系统如无特殊说明，系
+subsystem parasitic current shall not
+统静态电流应不大于 1mA。任何偏差需与
+exceed 1mA nominal. The different shall
+架构组确认。
+confirm with architecture team.
+c) 电磁兼容性要求，应符合 SMTC 3 800 c) Electromagnetic requirements shall
+006所规定的要求。 conform to SMTC 3 800 006.
+d) DV 测试可靠性应满足 97%可靠度，75% d) The reliability of the DV test shall meet the
+置信度。 following requirements 97% reliability,
+75% confidence
+3.2.2 物理特性 3.2.2 Physical Characteristics
+胎压监测控制单元和胎压监测传感器在满足系 TPMS ECU and TPMS sensor shall lightly,
+统功能、性能前提下要尽可能的轻量化、小型化、 small and firmly at the same time meet function
+and performance requirement.
+坚固。
+3.2.2.1 胎压控制器 3.2.2.1 TPMS ECU
+胎压控制器的安装不应贴近金属表面，距离至 The distance between TPMS ECU and metal
+suFRace at least is TBD mm. The TPMS ECU
+少保持在 TBD mm。胎压监测控制器外表尺寸不应
+must be capable of fitting into a maximum
+大于100 mm X 35 mm X 15 mm。控制器的质量不 package envelop of 100 mm X 35 mm X
+应超过70 g。 15 mm. The mass of the ECU shall not exceed
+70 grams.
+3.2.2.2 胎压传感器 3.2.2.2 Tire Pressure Sensor
+The TPS unit shall be mounted unobtrusively
+胎压传感器安装在轮胎的内部，带有标准的气
+on the inside of the wheel, and shall mount in a
+门嘴阀杆。在轮胎生命周期内，传感器的位置不应 standard valve stem hole. The location of the
+sensor unit shall not interfere with normal tire
+影响轮胎的保养与维修。在轮胎总装厂，传感器安 maintenance and repair that may be performed
+during the life of the vehicle. The enclosure of
+装不应影响正常的轮胎装配流程。
+the sensor unit shall not interfere with normal
+tire mounting procedures at the wheel/tire
+轮胎气门阀杆与盖帽的总长度不应超过轮胎平 assembly plant.
+面。整个传感器总成的质量不应超过30 g。 The tire valve stem with valve stem cap
+installed shall not protrude beyond the plane of
+the wheel. The mass of the entire sensor
+assembly shall not exceed 30 grams.
+3.2.3 可靠性 3.2.3 Reliability
+a) The subsystem shall meet ASIL.
+a) 本子系统应满足ASIL安全等级为 QM。
+b) The subsystem shall meet requirement of
+b) 本子系统应满足IPTV的可靠性要求。 IPTV
+c) The Reliability Evaluation Point is 160000
+c) 本子系统的使用寿命为10年/16万千米。
+km or 10 years whichever comes first.
+34
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR ConfidentialSSTS XXXX 871.07-2015(V3)
+3.2.3.1 可靠性评估点 3.2.3.1 Reliability Evaluation Point
+胎压监测控制系统可靠性担保期为 10 年或 16 TPMS warranty period is 10 years or 160000
+万公里，在此期间，供应商必须对胎压监测控制系 km. In this period, the suppliers should ensure
+统实现零缺陷担保。 the components are zero warranty.
+3.2.3.2 可靠性要求 3.2.3.2 Reliability Requirements
+若可靠性目标无其他特殊规定，必须满足最低 If no other special requirement, product
+reliability must be at least 97 %, with a
+75 %置信度，97 %可靠性要求，符合韦布尔分布，
+statistical confidence of 75 %, and shall be
+具体要求请与SMTC相关试验认证工程师确认。 according to the Weibull Distributing. The detail
+information please contact with SMTC
+DV/PV 中的试验样件数量应根据可靠度实际计 Validation Engineer
+The quantity of test samples in DV/PV must
+算结果执行．
+meet the reliability calculation result.
+During the design, development and/or
+在设计，开发与验证阶段，整车不能发生安全
+validation phases, the vehicle shall have no
+相关事件对任何人员，驾乘人员或者行人等造成伤 unaddressed safety-related incidents to leads
+to major injury to any person (e.g. vehicle
+害，或者导致车辆不可使用。
+occupant, pedestrian.etc.) or the vehicle being
+disabled.
+a) 供应商必须负责完成零件或者系统的
+a) The supplier is responsible for design
+DV/PV测试； validation (DV) /product validation (PV) of
+Component and Subsystem reliability
+b) 在控制器设计阶段，产品工程师和供应商
+demonstration.
+要制定详细可行的DFMEA，并通过PDT b) In the design stage of ECU, DRE and
+suppliers should compile an available
+团队的评估。
+detailed DFMEA which shall pass PDT
+evaluation.
+c) 在产品制造阶段，质量工程师和供应商要
+c) In the producing stage of outside rear view
+制定详细可行的PFMEA，并通过PDT团 mirrors, SQE and suppliers should compile
+a available detailed PFMEA which shall
+队的评估。
+pass PDT evaluation.
+d) 在控制器验证阶段，需要通过SMTC产品
+d) In the validation stage, the TPS should
+标准的试验和整车路试的验证。 pass the tests of SMTC Standards and
+vehicle road test.
+e) 每一个子系统零件必须具备长久的标记生
+e) Every part must be permanently marked
+产日期、批号，以确保完全的可跟踪性。 with date of manufacture and batch codes,
+to ensure full traceability.
+3.2.4 可维修性 3.2.4 Serviceability
+供应商应在OTS前,提供关于胎压监测系统的 The supplier shall offer the information about
+设计、使用和维修信息，如: BOM 表，零件结构和 design, usage and maintain before OTS, as
+BOM list, component structure and function
+功能描述、控制系统原理、故障诊断、维修专用工
+description, control principle, malfunction
+具、相关技术参数等。该零件的设计应确保仅采用
+diagnostic, maintain tool, and correlation
+市场上可以获得的通用工具实现售后的拆装、诊断
+technology parameter.etc. the component’s
+及保养维护服务，所有的这些售后服务都尽量避免
+mount, diagnostic and maintain shall use the
+依赖特别开发的“专用工具”就可完成。 existing general tool. The AS shall avoid
+developing special “expert tool”.
+3.2.4.1 维修设施 3.2.4.1 Service Infrastructure
+供应商须提供胎压传感器安装工具，以及工具 The supplier shall offer mount-tool for TPS and
+的使用说明和维修信息。 usage and maintain illuminate of tool.
+供应商须指定相关胎压传感器的激活工具或者 The supplier shall appoint or develop the
+协助开发工具，并提供工具的相关使用说明和维修 activation-tool and offer usage and maintain
+35
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR ConfidentialSSTS XXXX 871.07-2015(V3)
+信息给售后工程。 information of tool to AS.
+供应商须就传感器的安装与激活进行相关培
+The supplier needs to do training about mount
+训。 flow and active operation of TPS.
+3.2.4.2 维护保养 3.2.4.2 Maintenance
+本子系统在生命周期内免维护保养。 In the usage life of TPMS, it needn’t
+maintenance.
+当传感器无法被激活,或者电量低于2.1 V (依据
+When the TPS can’t be active, or the battery is
+实际情况加以调整)时，须更换胎压传感器。 less than 2.1 V (the valve will be tuned based
+on fact), TPS must be changed.
+3.2.4.3 维修 3.2.4.3 Repair
+3.2.4.3.1 胎压传感器 3.2.4.3.1 Tire Pressure Sensor
+胎压传感器不可维修。 TPS can’t be repaired.
+3.2.4.3.2 胎压监测控制器 3.2.4.3.2 TPMS ECU
+The TPMS ECU shall have upstanding
+胎压监测控制器必须具备良好的诊断设计，以
+diagnostic document to develop the diagnose
+便根据诊断规范文档开发的售后诊断仪能够有效的
+tool which can effectively read DTC or
+对系统性能或部件的失效进行故障码或状态读取。 system’s status.
+在诊断规范设计冻结的同时，应同时发布包含 When release the diagnostic design, the
+各 DTC 详细信息(如设置条件、运行条件、清除条 specification shall include DTC detail (as
+件）的故障码诊断管理规范。该规范用于开发售后 setting condition, operation condition, clear
+condition). The specification shall be used to
+诊断手册，指导维修人员对故障的理解、判定及维
+instruct the maintain personnel to comprehend,
+修。
+determinant, maintain fault.
+控制系统中主要部件的维修涉及到更换、刷新 The specification shall define the maintain flow
+或配置操作的，需明确定义其流程。 of ECU’S important assembly when replace,
+refurbish or reconfiguration.
+在系统布置阶段，需要考虑到售后维修的可行
+We must consider the feasibility of maintain in
+性，保证维修胎压监测控制器所需工时不高于竞
+the system collocation phase in order to the
+品。
+time for maintain isn’t more than sample.
+3.2.4.4 维修配件 3.2.4.4 Service Parts
+除非另有约定，本子系统的售后备件支持周期 Except otherwise specified, life of TPMS
+应不短于SMPV该车型停产后的10年时间。 service part support shall be provided for at
+least a period of 10 years following the last
+vehicle sold out in the market.
+3.3 设计和结构 3.3 Design and Construction
+3.3.1 材料、工艺和零件选择指导 3.3.1 Material, Process and Parts Selection
+Guidelines
+本系统设计应该遵从与之适应的SMTC材料、 The TPMS design shall comply with the
+工艺和零部件标准。 applicable SMTC material, processes and
+parts standards.
+3.3.1.1 材料选择指导 3.3.1.1 Material Guidelines
+a) 所使用的各类材料必须满足已有的SMTC a) All kinds of material used must be
+材料标准。 according the effective SMTC material
+standards.
+36
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR ConfidentialSSTS XXXX 871.07-2015(V3)
+b) 材料的选择应满足任何潜在市场有害物质 b) Material selection shall comply with the
+禁/限制使用法规及上海汽车标准SMTC5 requirement for prohibited / restricted used
+harmful substances of any potential
+500 001《 汽车零件和材料中禁用限用危险
+market’s regulation and SMPV standard
+物质》与SMTC5 500 002《 欧盟REACH法
+SMTC 5 500 001《 Automotive Prohibited
+规实施指南 》等要求.
+/ Restricted Hazardous Sub-stances for
+Parts and Materials》、SMTC 5 500 002
+《 EU REACH regulation implement
+guideline》.
+c) 材料必须在有明确的工作环境和使用环境 c) Material selection must consider the
+条件下进行选择，所选材料必须满足工作 requirements of working condition and
+environmental condition. The selected
+环境和使用环境特性。
+material must satisfy the working condition
+and using environment properties.
+d) 材料选择应首先参照SMTC材料库文件， d) Material selection shall first choose from
+新材料在使用之前必须经过新材料开发验 SMTC Material Data Base, new-material
+selection shall via new-material
+证且结果合格。
+development validation and get approved.
+3.3.1.2 工艺指导 3.3.1.2 Process Guidelines
+供应商在进行工装制造以前，必须由供应商质 The Supplier’s tooling design must be reviewed
+量工程师（SQE）对工装设计进行确认。 and approved by SMPV/SMTC prior to start of
+tooling build.
+3.3.1.3 回收利用 3.3.1.3 Recycling
+Implement recycling/recovery design is
+应按照上海汽车标准SMTC 5 500 004要求开
+according to the requirement of SMPV
+展零件回收利用设计，以达成上海汽车整车材料回 standard SMTC5 500 004，to ensure the
+收利用率满足任何潜在市场回收利用法规限值要 whole vehicle recycling/recovery rate of SMPV
+satisfy with the requirement of any potential
+求。各系统零件的回收利用率要求，请与中心实验
+market’s regulation. Recycling/Recovery Rate
+室材料工程师协商制定。 requirements of sub-system parts shall be
+coordinate with SCL material engineer.
+3.3.1.4 零件指导 3.3.1.4 Part Guidelines
+本系统的设计应与工程方案目录（物料清单） Components of the TPMS shall be designed in
+相一致。 accordance with the Catalog of Engineering
+Solutions (BOM).
+3.3.2 设计指导和约束 3.3.2 Design Guidelines and Constraints
+本系统的设计要满足目标市场的法规要求，依 The TPMS design should comply with the legal
+据法规进行产品设计。 requirement of any country where the market
+belongs, and other requirements.
+本系统的功能、结构、材料选择要满足产品
+The function, structure and material of TPMS
+SOR要求。
+should meet the requirement of SOR.
+3.3.3 识别和标记 3.3.3 Identification and Marking
+本子系统所包括电控单元的标签应满足SMTC ECUs in the subsystem shall marked according
+2 800 009标准的要求。 to the requirement of SMTC 2 800 009.
+Material shall be marked according to the
+材料应按照上海汽车标准SMTC 5 500 003
+requirement of SMPV standard SMTC 5 500
+《汽车塑料件、橡胶件和热塑性弹性体件的材料标
+003《 Material identification and marking of
+37
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR ConfidentialSSTS XXXX 871.07-2015(V3)
+识与标记》要求进行材料标识。 automotive plastic, rubber and thermoplastic
+elastomeric parts》.
+3.3.4 制造质量要求 3.3.4 Workmanship
+本子系统所包括零件应满足SMTC 2 800 008 The subsystem shall meet the requirement of
+的要求。 SMTC 2 800 008.
+3.3.5 互换性 3.3.5 Interchange ability
+本系统的子零件的变更应能够替代原先的设 The TPMS has interchange ability, and don’t
+计，而不影响系统其他部件的使用。 affect the other component of TPMS when it be
+changed.
+一旦子零件发生变更，系统需要对传感器重新
+Once the component of TPMS be changed, the
+进行ID学习。
+TPMS need to learn sensor’s ID again.
+3.4 子系统售后支持 3.4 Support of Subsystem After Sale
+售后工程师、产品工程师和供应商一起确定可 The available sales parts catalog should be
+用的售后配件目录。 decided by ASE, DRE and suppliers together.
+在整车生产启动时，由供应商提供的配件需要 The parts provided by suppliers should get
+准备就绪。 ready before SOP.
+在车辆寿命周期内以及产品发布后的十年内，
+All suppliers are required to offer TPMS ECU
+供应商必须向 SMTC 提供质量合格的控制器售后配
+components with good quality for ten years
+件。 after production has ceased.
+3.5 子系统操作培训 3.5 Subsystem Operator Training
+本子系统的操作说明见整车用户手册。
+The drivers can find the operation specification
+of TPMS form vehicle owner handbook.
+3.6 子系统和子零件特性 3.6 Subsystem and Component
+Characteristics
+3.6.1 子零件定义 3.6.1 Component Definition
+表31 子零件描述
+Table31 Components Description
+系统工作功耗 系统待机功耗 EOL 下线配 成
+序 零件名称 重量
+/Operating /Stand-by 置时间/EOL 本
+号 /Device 属性/Attribute /Weigh
+Power Power flash/configu /Co
+/No. name t
+Consumption Consumption ration time st
+控制器/ECU 1.2（W） 0.024（W）
+1.
+类型：射频传感器
+/Type: FR Sensor
+工作频率：433KHz
+传 感 器 /Operating
+2. /Sensor Frequency:433KHz
+胎压探测范围：（0-
+450）Kpa
+/Tire pressure Detection
+Range:（0-450）Kpa
+注：计算成本和重量时需要考虑线束。
+Note: Harness should be included in the calculation of cost and weight.
+38
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR ConfidentialSSTS XXXX 871.07-2015(V3)
+3.6.2 子零件界面描述 3.6.2 Component InteFRace Description
+4 验证 4 Validation
+4.1 一般要求 4.1 General
+供应商应负责所有材料的材料试验。具体的材 Suppliers shall be responsible to all of the
+料验证条件需要结合SMTC标准和工况来确定。 material test. The detail material test
+specification shall be determined by the
+本子系统及其关联子零件必须通过功能验证及 reference with SMTC standards and working
+性能验证。 condition.
+The subsystem relative parts shall pass the
+function validation and peFRormance
+verification.
+4.2 验证参考表 4.2 Validation Cross Reference Index
+表32 验证参考表
+Table32 Validation cross reference index
+要求 Requirement 验证validation
+责任人
+描述 段落 要求文档Required 段落 方法 等级
+Person in
+Description Paragraph document Paragraph Method Grade
+charge
+子系统定义 EE FEATURE
+3.1 - I S SMTC
+Subsystem Definition LIST
+外观 Appearance 3.1.1 D C SMTC
+内容 Content 3.1.2 - - - - -
+物理内容Physical Content 3.1.2.1 A、I S SMTC
+功能内容Functional Content 3.1.2.2 A、I S SMTC
+使用环境Ambient Environment 3.1.3
+温 度 和 热 环 境 操 作 条 件
+Temperature and Thermal 3.1.3.1 SMTC 3 800 001 T V 供应商
+Operating Conditions
+其 他 环 境 条 件 Other
+3.1.3.2 SMTC 3 800 001 T V 供应商
+Environmental Conditions
+电 子 电 气 环 境 条 件 SMTC 3 800 001
+Electrical/Electronic 3.1.3.3 SMTC 3 800 001 T C、S、V 供应商
+Environmental Conditions SMTC 3 800 006
+界面 InteFRaces 3.1.4 - - SMTC
+子系统和车辆外部 External-to-
+3.1.4.1 - - T S、V SMTC
+Vehicle to Subsystem
+子系统和子系统
+3.1.4.2 - - T C、S、V SMTC
+Subsystem to Subsystem
+产品特性
+3.2 - - - - -
+Product Characteristics
+性能PeFRormance 3.2.1 - - T C、S、V 供应商
+物理特性
+3.2.2 - - I C、S、V 供应商
+Physical Characteristics
+物理特性
+3.2.2 - - I C、S、V 供应商
+Physical Characteristics
+可靠性Reliability 3.2.3 - - T C、S、V 供应商
+可靠性评估点
+3.2.3.1 - - T C、S、V SMTC
+Reliability Evaluation Point
+可靠性要求
+3.2.3.2 - - T C、S、V SMTC
+Reliability Requirements
+可维修性Serviceability 3.2.4 - - A 供应商
+维修设施Service Infrastructure 3.2.4.1 - - V SMTC
+维护保养Maintenance 3.2.4.2 - - - - -
+维修Repair 3.2.4.3 - - I V SMTC
+维修配件Service Parts 3.2.4.4 - - T C 供应商
+39
+© 上汽集团版权所有 秘密文件 注意保密 Copyright SAIC MOTOR Confidential
